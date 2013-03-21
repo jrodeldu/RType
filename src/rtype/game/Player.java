@@ -2,6 +2,8 @@ package rtype.game;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -19,6 +21,7 @@ import javax.swing.ImageIcon;
 
 public class Player {
 	
+	private String shipSrc = "img/ship.png";
 	// Posiciones de la nave en los ejes x e y.
 	private int x, y;
 	// Desplazamiento horizontal.
@@ -28,14 +31,17 @@ public class Player {
 	// Ancho y alto de la imagen.
 	private int width, height;
 	private Image shipImg;
+	// Disparos de la nave.
+	private ArrayList<Bullet> bullets;
 	
 	public Player(){
-		ImageIcon img = new ImageIcon("img/ship.png");
+		ImageIcon img = new ImageIcon(shipSrc);
 		shipImg = img.getImage();
 		x = 10;
 		y = 172;
 		width = shipImg.getWidth(null);
 		height = shipImg.getHeight(null);
+		bullets = new ArrayList<Bullet>();
 	}
 	
 	/**
@@ -76,6 +82,14 @@ public class Player {
 	 */
 	public Image getShipImage(){
 		return shipImg;
+	}
+	
+	/**
+	 * Getter del listado de balas disparadas.
+	 * @return ArrayList.
+	 */
+	public ArrayList getBullets(){
+		return bullets;
 	}
 	
 	/**

@@ -3,7 +3,7 @@ package rtype.game;
 import javax.swing.JFrame;
 
 /**
- * Clase Game
+ * Clase RType
  * 
  * Es la clase principal, se inicializará creando un objeto JFrame
  * en el que se desarrollará el juego.
@@ -12,13 +12,13 @@ import javax.swing.JFrame;
  *
  */
 
-public class Game{
+public class RType{
 	
 	/**
 	 * Constructor e iniciación del juego.
 	 * Creamos un objeto JFrame en el que se desarrollará el juego
 	 */
-	public Game(){
+	public RType(){
 		JFrame frame = new JFrame();
 		
 		// Configuración del frame.
@@ -33,7 +33,7 @@ public class Game{
 	}
 	
 	public static void main(String[] args){
-		new Game();
+		new RType();
 	}
 	
 }

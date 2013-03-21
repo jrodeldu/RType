@@ -22,9 +22,10 @@ import javax.swing.*;
 public class Level extends JPanel implements ActionListener{
 	
 	private Player player;
-	private Image background;
+	private Image backgroundImg;
 	private Timer time;
-	//private String srcBackground = "img/space.png";
+	private String backgroundSrc = "img/space.png";
+	private static final int DELAY = 5; // Retardo para el Timer
 	
 	/**
 	 * Constructor e inicialización.
@@ -34,17 +35,17 @@ public class Level extends JPanel implements ActionListener{
 		 player = new Player();
 		 
 		 // Timer inicializado a 5ms.
-		 time = new Timer(5, this);
+		 time = new Timer(DELAY, this);
 		 
-		 // Añadimos el listener que hemos creado más abajo.
-		 addKeyListener(new MyActionListener());
+		 // Añadimos al panel el listener de eventos de teclado. Clase interna (Inner class) creada al final.
+		 addKeyListener(new keyListener());
 		 
 		 // Extendemos de JPanel y establecemos foco en el elemento para que pueda reaccionar a eventos de teclado.
 		 setFocusable(true);
 		 
 		 // Establecemos fondo.
-		 ImageIcon img = new ImageIcon("img/space.png");
-		 background = img.getImage();
+		 ImageIcon img = new ImageIcon(backgroundSrc);
+		 backgroundImg = img.getImage();
 		 
 		 // Iniciamos timer.
 		 time.start();
@@ -53,24 +54,30 @@ public class Level extends JPanel implements ActionListener{
 	/**
 	 * Función llamada cada 5 ms
 	 * Se realizará el movimiento de la nave en pantalla.
+	 * 
+	 * Esta función es necesaria al implementar la interfaz ActionListener.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(player.getY());
-		System.out.println(player.getX());
+		// System.out.println(player.getY());
+		// System.out.println(player.getX());
 		
 		// Movemos la nave y pasamos los límites del panel.
 		player.move(getWidth(), getHeight());
 		repaint();
 	}
 	
+	/**
+	 * Función a la que se llama para redibujar la pantalla
+	 * del juego con las posiciones actualizadas.
+	 */
 	public void paint(Graphics g){
-		System.out.println("Llamada a paint!!");
+		// System.out.println("Llamada a paint!!");
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(backgroundImg, 0, 0, null);
 		g2d.drawImage(player.getShipImage(), player.getX(), player.getY(), null);
 	}
 	
@@ -82,7 +89,7 @@ public class Level extends JPanel implements ActionListener{
 	 * @author jrodeldu
 	 *
 	 */
-	private class MyActionListener extends KeyAdapter{
+	private class keyListener extends KeyAdapter{
 		// Tecla soltada
 		public void keyReleased(KeyEvent e){
 			player.keyReleased(e);
