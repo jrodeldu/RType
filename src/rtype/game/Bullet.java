@@ -71,7 +71,7 @@ public class Bullet {
 	 * Devuelve la visibilidad del proyectil.
 	 * @return
 	 */
-	public boolean getBulletVisible(){
+	public boolean isVisible(){
 		return visible;
 	}
 	
@@ -79,7 +79,7 @@ public class Bullet {
 	 * Establece visibilidad del proyectil.
 	 * @param visible
 	 */
-	public void setBulletVisible(boolean visible){
+	public void setVisible(boolean visible){
 		this.visible = visible;
 	}
 	
@@ -90,6 +90,6 @@ public class Bullet {
 	public void move(int maxWidth){
 		x += BULLET_SPEED;
 		// Control de límite. Si se sale se cambia visibilidad del proyectil.
-		if(x > maxWidth) setBulletVisible(false);
+		if(x > maxWidth) setVisible(false);
 	}	
 }

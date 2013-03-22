@@ -32,21 +32,27 @@ public class Player {
 	private String shipSrc = "img/ship.png";
 	// Disparos de la nave.
 	private ArrayList<Bullet> bullets;
+	// Visibilidad de la nave.
+	private boolean visible;
 	
 	public Player(){
+		visible = true;
 		ImageIcon img = new ImageIcon(shipSrc);
 		shipImg = img.getImage();
-		x = 10;
-		y = 172;
 		width = shipImg.getWidth(null);
 		height = shipImg.getHeight(null);
 		bullets = new ArrayList<Bullet>();
+		x = 10;
+		y = 172;
 	}
-	
+
 	/**
 	 * Movimiento horizontal y vertical de la nave.
 	 */
 	public void move(int maxWidth, int maxHeight){
+		// System.out.println(maxWidth - width);
+		// System.out.println(maxHeight - height);
+		
 		x = x + dx;
 		y = y + dy;
 		
@@ -55,8 +61,8 @@ public class Player {
 		if(y < 1) y = 1;
 		
 		// Control de límites inferior y derecho.
-		if(x > maxWidth - width) x = maxWidth - width;
-		if(y > maxHeight - height) y = maxHeight - height;
+		//if(x > maxWidth - width) x = maxWidth - width;
+		//if(y > maxHeight - height) y = maxHeight - height;
 	}
 	
 	/**
@@ -90,6 +96,22 @@ public class Player {
 	public ArrayList<Bullet> getBullets(){
 		return bullets;
 	}
+	
+	/**
+	 * Devuelve la visibilidad de la nave.
+	 * @return
+	 */
+	public boolean isVisible(){
+		return visible;
+	}
+	
+	/**
+	 * Establece visibilidad de la nave.
+	 * @param visible
+	 */
+	public void setVisible(boolean visible){
+		this.visible = visible;
+	}	
 	
 	/**
 	 * Movimientos al pulsar los botones de dirección.

@@ -27,7 +27,7 @@ public class RType{
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.add(new Level());
+		frame.add(new Level(1));
 		// Hacemos visitble el frame.
 		frame.setVisible(true);
 	}
