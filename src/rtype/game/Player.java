@@ -2,7 +2,6 @@ package rtype.game;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -15,13 +14,12 @@ import javax.swing.ImageIcon;
  * 
  * Tecla espacio encargada de disparar.
  * 
- * @author jrodeldu
+ * @author Jonatan Rodríguez Elduayen jrodeldu
  *
  */
 
 public class Player {
 	
-	private String shipSrc = "img/ship.png";
 	// Posiciones de la nave en los ejes x e y.
 	private int x, y;
 	// Desplazamiento horizontal.
@@ -31,6 +29,7 @@ public class Player {
 	// Ancho y alto de la imagen.
 	private int width, height;
 	private Image shipImg;
+	private String shipSrc = "img/ship.png";
 	// Disparos de la nave.
 	private ArrayList<Bullet> bullets;
 	
@@ -85,10 +84,10 @@ public class Player {
 	}
 	
 	/**
-	 * Getter del listado de balas disparadas.
+	 * Getter del listado de proyectiles disparados.
 	 * @return ArrayList.
 	 */
-	public ArrayList getBullets(){
+	public ArrayList<Bullet> getBullets(){
 		return bullets;
 	}
 	
@@ -121,10 +120,18 @@ public class Player {
 			fire();
 		}
 	}
-
+	
+	/**
+	 * Se dispara un proyectil y se añade a la colección de disparos.
+	 * Se crea un nuevo objeto Bullet con posición definita por una fórmula
+	 * que recoge la posición x,y de la nave haciendo que el proyectil salga desde
+	 * el lado derecho de la nave y a mitad de altura de la misma.
+	 */
 	private void fire() {
 		// TODO Auto-generated method stub
-		System.out.println("Fuego!");
+		// System.out.println("Fuego!");
+		bullets.add(new Bullet(x + width, y + height / 2));
+		System.out.println(bullets.size());
 	}
 
 	/**

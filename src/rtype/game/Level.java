@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -63,8 +64,20 @@ public class Level extends JPanel implements ActionListener{
 		// System.out.println(player.getY());
 		// System.out.println(player.getX());
 		
+		// Mover misiles.
+		ArrayList<Bullet> bulletsAL = player.getBullets();
+		for (int i = 0; i < bulletsAL.size(); i++) {
+			Bullet b = bulletsAL.get(i);
+			if(b.getBulletVisible()){
+				b.move(getWidth());
+			}else{
+				bulletsAL.remove(i);
+			}
+		}
+		
 		// Movemos la nave y pasamos los límites del panel.
 		player.move(getWidth(), getHeight());
+		
 		repaint();
 	}
 	
@@ -75,10 +88,23 @@ public class Level extends JPanel implements ActionListener{
 	public void paint(Graphics g){
 		// System.out.println("Llamada a paint!!");
 		super.paint(g);
-		Graphics2D g2d = (Graphics2D) g;
 		
+		Graphics2D g2d = (Graphics2D) g;
+		ArrayList<Bullet> bulletsAL = player.getBullets();
+		
+		// Dibujamos fondo.
 		g2d.drawImage(backgroundImg, 0, 0, null);
+		
+		// Dibujamos nave.
 		g2d.drawImage(player.getShipImage(), player.getX(), player.getY(), null);
+		
+		// Dibujamos proyectiles.
+		for (int i = 0; i < bulletsAL.size(); i++) {
+			System.out.println("dibujo bala " + i);
+			Bullet b = bulletsAL.get(i);
+			//System.out.println("PosX: " + b.getX() + " PosY: " + b.getY());
+			g2d.drawImage(b.getImage(), b.getX(), b.getY(), null);
+		}
 	}
 	
 	

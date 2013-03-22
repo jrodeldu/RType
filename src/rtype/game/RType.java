@@ -8,7 +8,7 @@ import javax.swing.JFrame;
  * Es la clase principal, se inicializará creando un objeto JFrame
  * en el que se desarrollará el juego.
  * 
- * @author jrodeldu
+ * @author Jonatan Rodríguez Elduayen jrodeldu
  *
  */
 
