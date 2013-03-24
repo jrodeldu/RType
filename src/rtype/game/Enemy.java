@@ -5,40 +5,45 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 /**
- * Clase de los enemigos del juego.
- * Las naves enemigas son de 2 tipos (A y B)
+ * Clase de naves enemigas.
  * 
- * Ningún enemigo efectúa disparos. Simplemente se mueven en su eje X
- * y si llegan al final de la pantalla vivos vuelven a aparecer.
+ * Es el modelo base para los distintos tipos de enemigos
+ * que en este caso tendrán distinto comportamiento en el desplazamiento.
+ * 
+ * El resto de métodos y propiedades no varía salvo la imágen que representa
+ * las naves enemigas.
  * 
  * @author Jonatan Rodríguez Elduayen jrodeldu
  *
  */
-
-public class Enemy{
+public class Enemy {
 	
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
+	private boolean visible;
 	private int width, height;
 	private Image enemyImg;
-	private String enemySrc = "img/enemyA.png";
-	private boolean visible;
-	//private 
 	
 	/**
 	 * Constructor de enemigos
+	 * @param xPos posición inicial en el eje X
+	 * @param yPos posición inicial en el eje Y
+	 * @param enemySrc imágen de la nave.
 	 */
-	public Enemy() {
+	public Enemy(int xPos, int yPos, String enemySrc) {
 		// TODO Auto-generated constructor stub
 		visible = true;
+		// Imágen
 		ImageIcon img = new ImageIcon(enemySrc);
 		enemyImg = img.getImage();
 		width = enemyImg.getWidth(null);
 		height = enemyImg.getHeight(null);
 		// Generar posición aleatoriamente.
-		x = 520;
-		y = 150;
+		x = xPos;
+		y = yPos;
 	}
+	
+	/* Getters y Setters */
 	
 	/**
 	 * Recoge valor de la nave en el eje horizontal
@@ -49,25 +54,11 @@ public class Enemy{
 	}
 
 	/**
-	 * Establece posición en eje horizontal del enemigo
-	 */
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	/**
 	 * Recoge valor de la nave en el eje vertical
 	 * @return valor ejeY
 	 */
 	public int getY() {
 		return y;
-	}
-	
-	/**
-	 * Establece posición en eje vertical del enemigo
-	 */
-	public void setY(int y) {
-		this.y = y;
 	}
 	
 	/**
@@ -85,7 +76,7 @@ public class Enemy{
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
-	
+
 	/**
 	 * Getter Image del enemigo
 	 * @return imagen de la nave enemiga.
@@ -93,7 +84,18 @@ public class Enemy{
 	public Image getImage() {
 		return enemyImg;
 	}
-	
-	
-	
+
+	/**
+	 * @return height de la imagen de la nave enemiga.
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * @return width de la imagen de la nave enemiga.
+	 */
+	public int getWidth() {
+		return width;
+	}
 }

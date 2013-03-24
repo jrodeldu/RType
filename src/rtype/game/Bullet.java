@@ -24,7 +24,7 @@ public class Bullet {
 	private static final int BULLET_SPEED = 3;
 	private boolean visible;
 	private Image bulletImg;
-	private String bulletSrc = "img/bullet.png";
+	private static final String BULLET_IMG = "img/bullet.png";
 	
 	/**
 	 * Constructor del objeto.
@@ -39,7 +39,7 @@ public class Bullet {
 		this.y = y;
 		visible = true;
 		// Imágen
-		ImageIcon img = new ImageIcon(bulletSrc);
+		ImageIcon img = new ImageIcon(BULLET_IMG);
 		bulletImg = img.getImage();
 	}
 	

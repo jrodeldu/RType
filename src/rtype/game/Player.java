@@ -29,7 +29,7 @@ public class Player {
 	// Ancho y alto de la imagen.
 	private int width, height;
 	private Image shipImg;
-	private String shipSrc = "img/ship.png";
+	private static final String SHIP_IMG = "img/ship.png";
 	// Disparos de la nave.
 	private ArrayList<Bullet> bullets;
 	// Visibilidad de la nave.
@@ -37,7 +37,7 @@ public class Player {
 	
 	public Player(){
 		visible = true;
-		ImageIcon img = new ImageIcon(shipSrc);
+		ImageIcon img = new ImageIcon(SHIP_IMG);
 		shipImg = img.getImage();
 		width = shipImg.getWidth(null);
 		height = shipImg.getHeight(null);
@@ -61,8 +61,8 @@ public class Player {
 		if(y < 1) y = 1;
 		
 		// Control de límites inferior y derecho.
-		//if(x > maxWidth - width) x = maxWidth - width;
-		//if(y > maxHeight - height) y = maxHeight - height;
+		if(x > maxWidth - width) x = maxWidth - width;
+		if(y > maxHeight - height) y = maxHeight - height;
 	}
 	
 	/**

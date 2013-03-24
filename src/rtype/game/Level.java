@@ -3,6 +3,7 @@ package rtype.game;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -10,7 +11,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * Es clase se refiere al contenedor de elementos.
@@ -23,12 +26,17 @@ import javax.swing.*;
 
 public class Level extends JPanel implements ActionListener{
 	
-	private int difficulty;
-	private ArrayList<Enemy> enemies;
-	private Player player;
+	// Resolución
+	private static final int SCREEN_WIDTH = 800;
+	private static final int SCREEN_HEIGHT = 600;
+	// Imagen de fondo.
 	private Image backgroundImg;
+	private static final String BACKGROUND_IMG = "img/space.png";
+	private int difficulty;
+	private ArrayList<EnemyA> enemies;
+	private ArrayList<EnemyB> enemiesB;
+	private Player player;
 	private Timer time;
-	private String backgroundSrc = "img/space.png";
 	private static final int DELAY = 5; // Retardo para el Timer
 	
 	/**
@@ -38,8 +46,10 @@ public class Level extends JPanel implements ActionListener{
 	public Level(int difficulty) {
 		// TODO Auto-generated constructor stub
 		
-		this.difficulty = difficulty;
+		this.setDifficulty(difficulty);
 		player = new Player();
+		enemies = new ArrayList<EnemyA>();
+		enemiesB = new ArrayList<EnemyB>();
 		
 		// Añadimos al panel el listener de eventos de teclado. Clase interna (Inner class) creada al final.
 		addKeyListener(new keyListener());
@@ -48,7 +58,7 @@ public class Level extends JPanel implements ActionListener{
 		setFocusable(true);
 		 
 		// Establecemos fondo.
-		ImageIcon img = new ImageIcon(backgroundSrc);
+		ImageIcon img = new ImageIcon(BACKGROUND_IMG);
 		backgroundImg = img.getImage();
 		
 		// Inicializar los Enemigos.
@@ -67,14 +77,18 @@ public class Level extends JPanel implements ActionListener{
 		// TODO Auto-generated method stub
 		Random ran = new Random();
 		int x,y;
-
-		for (int i = 0; i < 10; i++) {
+		
+		for (int i = 0; i < 5; i++) {
 			// Posición en el eje vertical y horizontal aleatoria del enemigo.
-			x = ran.nextInt(200) + backgroundImg.getWidth(null);
-			y = ran.nextInt(backgroundImg.getHeight(null));
+			x = ran.nextInt(200) + SCREEN_WIDTH;
+			y = ran.nextInt(SCREEN_HEIGHT-100);
 			System.out.println(x + " - " + y);
-			//enemies.add(e)
+			enemies.add(new EnemyA(x, y));
+			x = ran.nextInt(100)-400;
+			System.out.println(x + " - " + y);
+			enemiesB.add(new EnemyB(x, y));
 		}
+		
 	}
 
 	/**
@@ -90,7 +104,7 @@ public class Level extends JPanel implements ActionListener{
 		// System.out.println(player.getX());
 		
 		// Movemos la nave y pasamos los límites del panel.
-		player.move(getWidth(), getHeight());
+		player.move(SCREEN_WIDTH, SCREEN_HEIGHT);
 		
 		// Mover misiles.
 		ArrayList<Bullet> bulletsAL = player.getBullets();
@@ -100,6 +114,25 @@ public class Level extends JPanel implements ActionListener{
 				b.move(getWidth());
 			}else{
 				bulletsAL.remove(i);
+			}
+		}
+		
+		// Mover enemigos
+		for (int i = 0; i < enemies.size(); i++) {
+			EnemyA en = enemies.get(i);
+			if(en.isVisible()){
+				en.move();
+			}else{
+				enemies.remove(i);
+			}
+		}
+		
+		for (int i = 0; i < enemiesB.size(); i++) {
+			EnemyB en = enemiesB.get(i);
+			if(en.isVisible()){
+				en.move();
+			}else{
+				enemiesB.remove(i);
 			}
 		}
 		
@@ -130,9 +163,41 @@ public class Level extends JPanel implements ActionListener{
 			//System.out.println("PosX: " + b.getX() + " PosY: " + b.getY());
 			g2d.drawImage(b.getImage(), b.getX(), b.getY(), null);
 		}
+		
+		// Dibujamos enemigos tipo A.
+		for (int i = 0; i < enemies.size(); i++) {
+			g2d.drawImage(enemies.get(i).getImage(), enemies.get(i).getX(), enemies.get(i).getY(), null);
+		}
+		
+		// Dibujamos enemigos tipo B.
+		for (int i = 0; i < enemiesB.size(); i++) {
+			g2d.drawImage(enemiesB.get(i).getImage(), enemiesB.get(i).getX(), enemiesB.get(i).getY(), null);
+		}
+		
 	}
 	
+	/**
+	 * Getter enemigos.
+	 * @return AraryLisT de enemigos
+	 */
+	public ArrayList<EnemyA> getEnemies(){
+		return enemies;
+	}
 	
+	/**
+	 * @return dificultad del juego
+	 */
+	public int getDifficulty() {
+		return difficulty;
+	}
+
+	/**
+	 * @param difficulty dificultad a establecer
+	 */
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
+	}
+
 	/**
 	 * Clase interna que hará las funciones de Listener
 	 * sobre los eventos del teclado.
