@@ -1,6 +1,7 @@
 package rtype.game;
 
 import java.awt.Image;
+import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 
@@ -86,16 +87,18 @@ public class Enemy {
 	}
 
 	/**
-	 * @return height de la imagen de la nave enemiga.
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
 	 * @return width de la imagen de la nave enemiga.
 	 */
 	public int getWidth() {
 		return width;
+	}
+	
+	/**
+	 * Creamos un rectángulo que rodee el elemento tomando su posición en
+	 * los ejes (x,y) y el tamaño de la imagen.
+	 * @return rectangle límites del elemento para detección de colisiones.
+	 */
+	public Rectangle getBounds(){
+		return new Rectangle(getX(), getY(), width, height);
 	}
 }

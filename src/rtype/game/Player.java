@@ -1,6 +1,7 @@
 package rtype.game;
 
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -34,6 +35,8 @@ public class Player {
 	private ArrayList<Bullet> bullets;
 	// Visibilidad de la nave.
 	private boolean visible;
+	// Retardo del último disparo.
+	private long lastFire = 0;	
 	
 	public Player(){
 		visible = true;
@@ -139,7 +142,11 @@ public class Player {
 		}
 		
 		if (key == KeyEvent.VK_SPACE){
-			fire();
+			// Incluimos un retardo para que el disparo tenga un ritmo continuo y sin soltar ráfagas con balas sin separación.
+			if (System.currentTimeMillis() - lastFire > 175) {
+				lastFire = System.currentTimeMillis();
+				fire();
+			}
 		}
 	}
 	
@@ -153,7 +160,7 @@ public class Player {
 		// TODO Auto-generated method stub
 		// System.out.println("Fuego!");
 		bullets.add(new Bullet(x + width, y + height / 2));
-		System.out.println(bullets.size());
+		// System.out.println(bullets.size());
 	}
 
 	/**
@@ -171,6 +178,15 @@ public class Player {
 		if(key == KeyEvent.VK_Q || key == KeyEvent.VK_A || key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
 			dy = 0;  
 		}
-	}	
+	}
+	
+	/**
+	 * Creamos un rectángulo que rodee el elemento tomando su posición en
+	 * los ejes (x,y) y el tamaño de la imagen.
+	 * @return rectangle límites del elemento para detección de colisiones.
+	 */
+	public Rectangle getBounds(){
+		return new Rectangle(getX(), getY(), width, height);
+	}
 	
 }

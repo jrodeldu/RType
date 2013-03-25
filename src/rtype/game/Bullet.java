@@ -1,6 +1,7 @@
 package rtype.game;
 
 import java.awt.Image;
+import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 
@@ -19,8 +20,9 @@ import javax.swing.ImageIcon;
 public class Bullet {
 
 	// Posición del proyectil.
-	private int x;
-	private int y;
+	private int x, y;
+	// Alto y ancho del proyectil.
+	private int width, height;
 	private static final int BULLET_SPEED = 3;
 	private boolean visible;
 	private Image bulletImg;
@@ -41,6 +43,8 @@ public class Bullet {
 		// Imágen
 		ImageIcon img = new ImageIcon(BULLET_IMG);
 		bulletImg = img.getImage();
+		width = bulletImg.getWidth(null);
+		height = bulletImg.getHeight(null);
 	}
 	
 	/**
@@ -91,5 +95,14 @@ public class Bullet {
 		x += BULLET_SPEED;
 		// Control de límite. Si se sale se cambia visibilidad del proyectil.
 		if(x > maxWidth) setVisible(false);
-	}	
+	}
+	
+	/**
+	 * Creamos un rectángulo que rodee el proyectil tomando su posición en
+	 * los ejes (x,y) y el tamaño de la imagen.
+	 * @return rectangle límites del elemento para detección de colisiones.
+	 */
+	public Rectangle getBounds(){
+		return new Rectangle(getX(), getY(), width, height);
+	}
 }

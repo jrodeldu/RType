@@ -3,7 +3,7 @@ package rtype.game;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -35,6 +35,8 @@ public class Level extends JPanel implements ActionListener{
 	private int difficulty;
 	private ArrayList<EnemyA> enemies;
 	private ArrayList<EnemyB> enemiesB;
+	// Total de enemigos según dificultad elegida.
+	private int totalEnemies;
 	private Player player;
 	private Timer time;
 	private static final int DELAY = 5; // Retardo para el Timer
@@ -46,10 +48,12 @@ public class Level extends JPanel implements ActionListener{
 	public Level(int difficulty) {
 		// TODO Auto-generated constructor stub
 		
-		this.setDifficulty(difficulty);
 		player = new Player();
 		enemies = new ArrayList<EnemyA>();
 		enemiesB = new ArrayList<EnemyB>();
+		this.difficulty = difficulty;
+		// Establecer total de enemigos
+		setTotalEnemies();
 		
 		// Añadimos al panel el listener de eventos de teclado. Clase interna (Inner class) creada al final.
 		addKeyListener(new keyListener());
@@ -71,6 +75,31 @@ public class Level extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Establecemos el total de enemigos que va a tener la partida
+	 * según el nivel de dificultad.
+	 */
+	private void setTotalEnemies() {
+		// TODO Auto-generated method stub
+		switch (getDifficulty()) {
+		case 1:
+			totalEnemies = 10;
+			break;
+			
+		case 2:
+			totalEnemies = 15;
+			break;
+			
+		case 3:
+			totalEnemies = 20;
+			break;
+			
+		case 4:
+			totalEnemies = 30;
+			break;			
+		}
+	}
+
+	/**
 	 * Creamos el array de enemigos según la dificultad seleccionada.
 	 */
 	private void loadEnemies() {
@@ -78,14 +107,13 @@ public class Level extends JPanel implements ActionListener{
 		Random ran = new Random();
 		int x,y;
 		
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < totalEnemies/2; i++) {
 			// Posición en el eje vertical y horizontal aleatoria del enemigo.
 			x = ran.nextInt(200) + SCREEN_WIDTH;
 			y = ran.nextInt(SCREEN_HEIGHT-100);
-			System.out.println(x + " - " + y);
+			// System.out.println(x + " - " + y);
 			enemies.add(new EnemyA(x, y));
 			x = ran.nextInt(100)-400;
-			System.out.println(x + " - " + y);
 			enemiesB.add(new EnemyB(x, y));
 		}
 		
@@ -102,6 +130,9 @@ public class Level extends JPanel implements ActionListener{
 		// TODO Auto-generated method stub
 		// System.out.println(player.getY());
 		// System.out.println(player.getX());
+		
+		// Control de colisiones
+		checkCollisions();
 		
 		// Movemos la nave y pasamos los límites del panel.
 		player.move(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -140,6 +171,37 @@ public class Level extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Control de colisiones cada 5ms
+	 */
+	private void checkCollisions() {
+		// TODO Auto-generated method stub
+		
+		ArrayList<Rectangle> enemyBounds = new ArrayList<Rectangle>();
+		
+		// Creamos áreas de colisiones en los enemigos
+		for (int i = 0; i < enemies.size(); i++) {
+			EnemyA en = enemies.get(i);
+			Rectangle enBounds = en.getBounds();
+			enemyBounds.add(enBounds);
+		}
+		
+		// Creamos áreas de colisiones en los proyectiles y comprobamos 
+		// si colisionan con los límites de los enemigos
+		ArrayList<Bullet> bulletsAL = player.getBullets();
+		for (int i = 0; i < bulletsAL.size(); i++) {
+			Bullet b = bulletsAL.get(i);
+			Rectangle bBounds = b.getBounds();
+			for (int j = 0; j < enemyBounds.size(); j++) {
+				if (b.isVisible() && enemies.get(j).isVisible() && bBounds.intersects(enemyBounds.get(j))) {
+					System.out.println("impacto!");
+					enemies.get(j).setVisible(false);
+					// enemies.remove(j); 
+				}
+			}
+		}
+	}
+
+	/**
 	 * Función a la que se llama para redibujar la pantalla
 	 * del juego con las posiciones actualizadas.
 	 */
@@ -158,7 +220,7 @@ public class Level extends JPanel implements ActionListener{
 		
 		// Dibujamos proyectiles.
 		for (int i = 0; i < bulletsAL.size(); i++) {
-			System.out.println("dibujo bala " + i);
+			// System.out.println("dibujo bala " + i);
 			Bullet b = bulletsAL.get(i);
 			//System.out.println("PosX: " + b.getX() + " PosY: " + b.getY());
 			g2d.drawImage(b.getImage(), b.getX(), b.getY(), null);
@@ -190,12 +252,12 @@ public class Level extends JPanel implements ActionListener{
 	public int getDifficulty() {
 		return difficulty;
 	}
-
+	
 	/**
-	 * @param difficulty dificultad a establecer
+	 * @return total de enemigos.
 	 */
-	public void setDifficulty(int difficulty) {
-		this.difficulty = difficulty;
+	public int getTotalEnemies(){
+		return totalEnemies;
 	}
 
 	/**
