@@ -1,7 +1,7 @@
 package rtype.game;
 
 /**
- * Clase de los enemigos del juego.
+ * Clase de los enemigos tipo A del juego.
  * Las naves enemigas son de 2 tipos (A y B)
  * 
  * Ningún enemigo efectúa disparos. Simplemente se mueven en su eje X

@@ -14,6 +14,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 /**
  * Es clase se refiere al contenedor de elementos.
@@ -158,10 +159,22 @@ public class Level extends JPanel implements ActionListener{
 			}
 		}
 		
+		// Los enemigos de tipo B tienen movimiento aleatorio en ejeY
+		Random dy = new Random();
+		int ran, y;
 		for (int i = 0; i < enemiesB.size(); i++) {
 			EnemyB en = enemiesB.get(i);
 			if(en.isVisible()){
-				en.move();
+				// Movmiento aleatorio. Control de que no se salga de los límites de alto de pantalla
+				ran = dy.nextInt(2);
+				if(ran == 0 && en.getY() > 0){
+					y = -1;
+				}else if(ran > 0 && en.getY() < SCREEN_HEIGHT){ 
+					y = 1;
+				}else{
+					y = 0;
+				}
+				en.move(y);
 			}else{
 				enemiesB.remove(i);
 			}
@@ -176,13 +189,29 @@ public class Level extends JPanel implements ActionListener{
 	private void checkCollisions() {
 		// TODO Auto-generated method stub
 		
-		ArrayList<Rectangle> enemyBounds = new ArrayList<Rectangle>();
+		// Área de colisión de la nave del jugador
+		Rectangle playerBounds = player.getBounds();
+		
+		ArrayList<Rectangle> enemyBoundsA = new ArrayList<Rectangle>();
+		ArrayList<Rectangle> enemyBoundsB = new ArrayList<Rectangle>();
 		
 		// Creamos áreas de colisiones en los enemigos
 		for (int i = 0; i < enemies.size(); i++) {
 			EnemyA en = enemies.get(i);
 			Rectangle enBounds = en.getBounds();
-			enemyBounds.add(enBounds);
+			enemyBoundsA.add(enBounds);
+			if(player.isVisible() && playerBounds.intersects(enBounds)){
+				player.setVisible(false);
+			}
+		}
+		
+		for (int i = 0; i < enemiesB.size(); i++) {
+			EnemyB en = enemiesB.get(i);
+			Rectangle enBounds = en.getBounds();
+			enemyBoundsB.add(enBounds);
+			if(player.isVisible() && playerBounds.intersects(enBounds)){
+				player.setVisible(false);
+			}
 		}
 		
 		// Creamos áreas de colisiones en los proyectiles y comprobamos 
@@ -191,11 +220,18 @@ public class Level extends JPanel implements ActionListener{
 		for (int i = 0; i < bulletsAL.size(); i++) {
 			Bullet b = bulletsAL.get(i);
 			Rectangle bBounds = b.getBounds();
-			for (int j = 0; j < enemyBounds.size(); j++) {
-				if (b.isVisible() && enemies.get(j).isVisible() && bBounds.intersects(enemyBounds.get(j))) {
-					System.out.println("impacto!");
+			for (int j = 0; j < enemyBoundsA.size(); j++) {
+				if (b.isVisible() && enemies.get(j).isVisible() && bBounds.intersects(enemyBoundsA.get(j))) {
 					enemies.get(j).setVisible(false);
 					// enemies.remove(j); 
+					b.setVisible(false);
+				}
+			}
+			for (int j = 0; j < enemyBoundsB.size(); j++) {
+				if (b.isVisible() && enemiesB.get(j).isVisible() && bBounds.intersects(enemyBoundsB.get(j))) {
+					enemiesB.get(j).setVisible(false);
+					// enemies.remove(j); 
+					b.setVisible(false);
 				}
 			}
 		}
@@ -215,8 +251,11 @@ public class Level extends JPanel implements ActionListener{
 		// Dibujamos fondo.
 		g2d.drawImage(backgroundImg, 0, 0, null);
 		
-		// Dibujamos nave.
-		g2d.drawImage(player.getShipImage(), player.getX(), player.getY(), null);
+		// Dibujamos nave sólo si sigue viva (visible)
+		if(player.isVisible()){
+			g2d.drawImage(player.getShipImage(), player.getX(), player.getY(), null);
+		}
+			
 		
 		// Dibujamos proyectiles.
 		for (int i = 0; i < bulletsAL.size(); i++) {

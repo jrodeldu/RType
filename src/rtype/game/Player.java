@@ -151,15 +151,14 @@ public class Player {
 	}
 	
 	/**
-	 * Se dispara un proyectil y se añade a la colección de disparos.
+	 * Si la nave está visible dispara un proyectil y se añade a la colección de disparos.
 	 * Se crea un nuevo objeto Bullet con posición definita por una fórmula
 	 * que recoge la posición x,y de la nave haciendo que el proyectil salga desde
 	 * el lado derecho de la nave y a mitad de altura de la misma.
 	 */
 	private void fire() {
 		// TODO Auto-generated method stub
-		// System.out.println("Fuego!");
-		bullets.add(new Bullet(x + width, y + height / 2));
+		if(isVisible()) bullets.add(new Bullet(x + width, y + height / 2));
 		// System.out.println(bullets.size());
 	}
 
