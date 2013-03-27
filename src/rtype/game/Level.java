@@ -1,5 +1,6 @@
 package rtype.game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -12,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 /**
  * Es clase se refiere al contenedor de elementos.
@@ -41,6 +42,7 @@ public class Level extends JPanel implements ActionListener{
 	private Player player;
 	private Timer time;
 	private static final int DELAY = 5; // Retardo para el Timer
+	private int enemiesKilled = 0;
 	
 	/**
 	 * Constructor e inicialización.
@@ -223,8 +225,10 @@ public class Level extends JPanel implements ActionListener{
 			for (int j = 0; j < enemyBoundsA.size(); j++) {
 				if (b.isVisible() && enemies.get(j).isVisible() && bBounds.intersects(enemyBoundsA.get(j))) {
 					enemies.get(j).setVisible(false);
-					// enemies.remove(j); 
+					//enemies.remove(j); 
 					b.setVisible(false);
+					enemiesKilled++;
+					totalEnemies--;
 				}
 			}
 			for (int j = 0; j < enemyBoundsB.size(); j++) {
@@ -232,6 +236,8 @@ public class Level extends JPanel implements ActionListener{
 					enemiesB.get(j).setVisible(false);
 					// enemies.remove(j); 
 					b.setVisible(false);
+					enemiesKilled++;
+					totalEnemies--;
 				}
 			}
 		}
@@ -274,6 +280,11 @@ public class Level extends JPanel implements ActionListener{
 		for (int i = 0; i < enemiesB.size(); i++) {
 			g2d.drawImage(enemiesB.get(i).getImage(), enemiesB.get(i).getX(), enemiesB.get(i).getY(), null);
 		}
+		
+		// HUD con datos de juego.
+		g2d.setColor(Color.white);
+		g2d.drawString("Puntos: " + enemiesKilled, 0, 10);
+		g2d.drawString("Enemigos restantes: " +totalEnemies, 625, 10);
 		
 	}
 	

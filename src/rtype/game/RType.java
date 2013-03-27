@@ -23,6 +23,7 @@ public class RType{
 		
 		// Configuración del frame.
 		frame.setTitle("RType - JRODELDU");
+
 		frame.setSize(800, 600);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

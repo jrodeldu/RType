@@ -13,7 +13,7 @@ package rtype.game;
 
 public class EnemyA extends Enemy{
 	
-	private static String ENEMY_SRC = "img/enemyA.png";
+	private static String ENEMY_SRC = "img/enemyA_s.png";
 	
 	/**
 	 * Constructor de enemigos
