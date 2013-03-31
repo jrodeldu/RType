@@ -24,6 +24,7 @@ public class Enemy {
 	private boolean visible;
 	private int width, height;
 	private Image enemyImg;
+	protected int speed;
 	
 	/**
 	 * Constructor de enemigos
@@ -31,7 +32,7 @@ public class Enemy {
 	 * @param yPos posición inicial en el eje Y
 	 * @param enemySrc imágen de la nave.
 	 */
-	public Enemy(int xPos, int yPos, String enemySrc) {
+	public Enemy(int xPos, int yPos, String enemySrc, int speed) {
 		// TODO Auto-generated constructor stub
 		visible = true;
 		// Imágen
@@ -42,6 +43,7 @@ public class Enemy {
 		// Generar posición aleatoriamente.
 		x = xPos;
 		y = yPos;
+		this.speed = speed;
 	}
 	
 	/* Getters y Setters */

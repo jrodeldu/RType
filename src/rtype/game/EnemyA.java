@@ -18,16 +18,16 @@ public class EnemyA extends Enemy{
 	/**
 	 * Constructor de enemigos
 	 */
-	public EnemyA(int xPos, int yPos) {
+	public EnemyA(int xPos, int yPos, int speed) {
 		// TODO Auto-generated constructor stub
-		super(xPos, yPos, ENEMY_SRC);
+		super(xPos, yPos, ENEMY_SRC, speed);
 	}
 	
 	/**
 	 * Movimiento constante de las naves
 	 */
 	public void move(){
-		x -= 1;
+		x -= speed;
 		if(x <= 0-getWidth())
 			x = 800;
 	}

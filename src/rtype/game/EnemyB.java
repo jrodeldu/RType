@@ -1,5 +1,7 @@
 package rtype.game;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
+
 /**
  * Clase de los enemigos tipo A del juego.
  * Las naves enemigas son de 2 tipos (A y B)
@@ -18,9 +20,9 @@ public class EnemyB extends Enemy{
 	/**
 	 * Constructor de enemigos
 	 */
-	public EnemyB(int xPos, int yPos) {
+	public EnemyB(int xPos, int yPos, int speed) {
 		// TODO Auto-generated constructor stub
-		super(xPos, yPos, ENEMY_SRC);
+		super(xPos, yPos, ENEMY_SRC, speed);
 	}
 	
 	/**
@@ -30,7 +32,7 @@ public class EnemyB extends Enemy{
 	 * @param dy desplazamiento aleatorio en ejeY generado.
 	 */
 	public void move(int dy){		
-		x += 1;
+		x += speed;
 		y += dy;
 		
 		if(x > 800)

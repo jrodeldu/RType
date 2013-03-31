@@ -35,7 +35,7 @@ public class Level extends JPanel implements ActionListener{
 	private Image backgroundImg;
 	private static final String BACKGROUND_IMG = "img/space.png";
 	private int difficulty;
-	private ArrayList<EnemyA> enemies;
+	private ArrayList<EnemyA> enemiesA;
 	private ArrayList<EnemyB> enemiesB;
 	// Total de enemigos según dificultad elegida.
 	private int totalEnemies;
@@ -43,6 +43,7 @@ public class Level extends JPanel implements ActionListener{
 	private Timer time;
 	private static final int DELAY = 5; // Retardo para el Timer
 	private int enemiesKilled = 0;
+	private int enemySpeed;
 	
 	/**
 	 * Constructor e inicialización.
@@ -52,7 +53,7 @@ public class Level extends JPanel implements ActionListener{
 		// TODO Auto-generated constructor stub
 		System.out.println("Dificultad: " + difficulty);
 		player = new Player();
-		enemies = new ArrayList<EnemyA>();
+		enemiesA = new ArrayList<EnemyA>();
 		enemiesB = new ArrayList<EnemyB>();
 		this.difficulty = difficulty;
 		// Establecer total de enemigos
@@ -86,18 +87,22 @@ public class Level extends JPanel implements ActionListener{
 		switch (getDifficulty()) {
 		case 0:
 			totalEnemies = 10;
+			enemySpeed = 1;
 			break;
 			
 		case 1:
 			totalEnemies = 15;
+			enemySpeed = 2;
 			break;
 			
 		case 2:
 			totalEnemies = 20;
+			enemySpeed = 3;
 			break;
 			
 		case 3:
 			totalEnemies = 30;
+			enemySpeed = 4;
 			break;			
 		}
 	}
@@ -115,9 +120,9 @@ public class Level extends JPanel implements ActionListener{
 			x = ran.nextInt(200) + SCREEN_WIDTH;
 			y = ran.nextInt(SCREEN_HEIGHT-100);
 			// System.out.println(x + " - " + y);
-			enemies.add(new EnemyA(x, y));
+			enemiesA.add(new EnemyA(x, y, enemySpeed));
 			x = ran.nextInt(100)-400;
-			enemiesB.add(new EnemyB(x, y));
+			enemiesB.add(new EnemyB(x, y, enemySpeed));
 		}
 		
 	}
@@ -152,12 +157,12 @@ public class Level extends JPanel implements ActionListener{
 		}
 		
 		// Mover enemigos
-		for (int i = 0; i < enemies.size(); i++) {
-			EnemyA en = enemies.get(i);
+		for (int i = 0; i < enemiesA.size(); i++) {
+			EnemyA en = enemiesA.get(i);
 			if(en.isVisible()){
 				en.move();
 			}else{
-				enemies.remove(i);
+				enemiesA.remove(i);
 			}
 		}
 		
@@ -198,8 +203,8 @@ public class Level extends JPanel implements ActionListener{
 		ArrayList<Rectangle> enemyBoundsB = new ArrayList<Rectangle>();
 		
 		// Creamos áreas de colisiones en los enemigos
-		for (int i = 0; i < enemies.size(); i++) {
-			EnemyA en = enemies.get(i);
+		for (int i = 0; i < enemiesA.size(); i++) {
+			EnemyA en = enemiesA.get(i);
 			Rectangle enBounds = en.getBounds();
 			enemyBoundsA.add(enBounds);
 			if(player.isVisible() && playerBounds.intersects(enBounds)){
@@ -223,8 +228,8 @@ public class Level extends JPanel implements ActionListener{
 			Bullet b = bulletsAL.get(i);
 			Rectangle bBounds = b.getBounds();
 			for (int j = 0; j < enemyBoundsA.size(); j++) {
-				if (b.isVisible() && enemies.get(j).isVisible() && bBounds.intersects(enemyBoundsA.get(j))) {
-					enemies.get(j).setVisible(false);
+				if (b.isVisible() && enemiesA.get(j).isVisible() && bBounds.intersects(enemyBoundsA.get(j))) {
+					enemiesA.get(j).setVisible(false);
 					//enemies.remove(j); 
 					b.setVisible(false);
 					enemiesKilled++;
@@ -272,8 +277,8 @@ public class Level extends JPanel implements ActionListener{
 		}
 		
 		// Dibujamos enemigos tipo A.
-		for (int i = 0; i < enemies.size(); i++) {
-			g2d.drawImage(enemies.get(i).getImage(), enemies.get(i).getX(), enemies.get(i).getY(), null);
+		for (int i = 0; i < enemiesA.size(); i++) {
+			g2d.drawImage(enemiesA.get(i).getImage(), enemiesA.get(i).getX(), enemiesA.get(i).getY(), null);
 		}
 		
 		// Dibujamos enemigos tipo B.
@@ -286,14 +291,6 @@ public class Level extends JPanel implements ActionListener{
 		g2d.drawString("Puntos: " + enemiesKilled, 0, 10);
 		g2d.drawString("Enemigos restantes: " +totalEnemies, 625, 10);
 		
-	}
-	
-	/**
-	 * Getter enemigos.
-	 * @return AraryLisT de enemigos
-	 */
-	public ArrayList<EnemyA> getEnemies(){
-		return enemies;
 	}
 	
 	/**
