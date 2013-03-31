@@ -50,7 +50,7 @@ public class Level extends JPanel implements ActionListener{
 	 */
 	public Level(int difficulty) {
 		// TODO Auto-generated constructor stub
-		
+		System.out.println("Dificultad: " + difficulty);
 		player = new Player();
 		enemies = new ArrayList<EnemyA>();
 		enemiesB = new ArrayList<EnemyB>();
@@ -84,19 +84,19 @@ public class Level extends JPanel implements ActionListener{
 	private void setTotalEnemies() {
 		// TODO Auto-generated method stub
 		switch (getDifficulty()) {
-		case 1:
+		case 0:
 			totalEnemies = 10;
 			break;
 			
-		case 2:
+		case 1:
 			totalEnemies = 15;
 			break;
 			
-		case 3:
+		case 2:
 			totalEnemies = 20;
 			break;
 			
-		case 4:
+		case 3:
 			totalEnemies = 30;
 			break;			
 		}
