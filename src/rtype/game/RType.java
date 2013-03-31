@@ -23,46 +23,47 @@ public class RType implements ActionListener{
 	
 	// Niveles de dificultad.
 	private ArrayList<String> difficulty;
+	private JFrame frameMain;
 	
 	/**
 	 * Constructor e iniciación del juego.
 	 * Creamos un objeto JFrame en el que se desarrollará el juego
 	 */
 	public RType(){
-		JFrame frame = new JFrame();
-		frame.setLayout(new GridLayout(5, 1));
-		frame.setSize(300, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frameMain = new JFrame();
+		frameMain.setLayout(new GridLayout(5, 1));
+		frameMain.setSize(300, 300);
+		frameMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.setTitle("RType - JRODELDU");
+		frameMain.setTitle("RType - JRODELDU");
 		
 		difficulty = new ArrayList<String>();
 		
 		JLabel lblBienvenida = new JLabel("Jugar RType");
 		lblBienvenida.setHorizontalAlignment((int) JLabel.CENTER_ALIGNMENT);
-		frame.add(lblBienvenida);
+		frameMain.add(lblBienvenida);
 		
 		JButton btnFacil = new JButton("FACIL");
 		btnFacil.addActionListener(this);
-		frame.add(btnFacil);
+		frameMain.add(btnFacil);
 		difficulty.add(btnFacil.getText());
 		
 		JButton btnNormal = new JButton("NORMAL");
 		btnNormal.addActionListener(this);
-		frame.add(btnNormal);
+		frameMain.add(btnNormal);
 		difficulty.add(btnNormal.getText());
 		
 		JButton btnComplicado = new JButton("COMPLICADO");
 		btnComplicado.addActionListener(this);
-		frame.add(btnComplicado);
+		frameMain.add(btnComplicado);
 		difficulty.add(btnComplicado.getText());
 		
 		JButton btnImposible = new JButton("IMPOSIBLE");
 		btnImposible.addActionListener(this);
-		frame.add(btnImposible);
+		frameMain.add(btnImposible);
 		difficulty.add(btnImposible.getText());
 		
-		frame.setVisible(true);
+		frameMain.setVisible(true);
 	}
 	
 	public void play(int difficulty){
@@ -84,6 +85,7 @@ public class RType implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		// Jugamos pasando el índice de dificultad.
+		frameMain.dispose();
 		play(difficulty.indexOf(e.getActionCommand()));
 	}
 	

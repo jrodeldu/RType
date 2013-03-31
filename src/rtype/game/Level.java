@@ -1,6 +1,8 @@
 package rtype.game;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -62,6 +64,8 @@ public class Level extends JPanel implements ActionListener{
 		 
 		// Extendemos de JPanel y establecemos foco en el elemento para que pueda reaccionar a eventos de teclado.
 		setFocusable(true);
+		
+		//setDoubleBuffered(true);
 		 
 		// Establecemos fondo.
 		ImageIcon img = new ImageIcon(BACKGROUND_IMG);
@@ -289,6 +293,19 @@ public class Level extends JPanel implements ActionListener{
 		g2d.drawString("Puntos: " + enemiesKilled, 0, 10);
 		g2d.drawString("Enemigos restantes: " +totalEnemies, 625, 10);
 		
+		if(enemiesA.size() == 0 && enemiesB.size() == 0){
+			//g2d.drawString("¡HAS GANADO!", getWidth()/2, getHeight()/2);
+			// Mensaje de victoria.
+			String msg = "¡HAS GANADO!";
+            Font font = new Font("Helvetica", Font.BOLD, 16);
+            g2d.setFont(font);
+            // Establecemos un objeto FontMetrics que nos permitirá conocer detalles de un texto
+            // para lograr un centrado en pantalla óptimo.
+            FontMetrics fm = getFontMetrics(font);
+
+            g2d.drawString(msg, (getWidth() - fm.stringWidth(msg)) / 2, getHeight() / 2);
+		}
+		
 	}
 	
 	/**
@@ -297,7 +314,7 @@ public class Level extends JPanel implements ActionListener{
 	public int getDifficulty() {
 		return difficulty;
 	}
-	
+
 	/**
 	 * @return total de enemigos.
 	 */

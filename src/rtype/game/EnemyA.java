@@ -28,7 +28,7 @@ public class EnemyA extends Enemy{
 	 */
 	public void move(){
 		x -= speed;
-		if(x <= 0-getWidth())
+		if(x < 0-getWidth())
 			x = 800;
 	}
 	

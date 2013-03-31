@@ -34,7 +34,7 @@ public class EnemyB extends Enemy{
 		y += dy;
 		
 		if(x > 800)
-			x = -200;
+			x = 0;
 	}
 	
 }
