@@ -18,7 +18,7 @@ public class EnemyA extends Enemy{
 	/**
 	 * Constructor de enemigos
 	 */
-	public EnemyA(int xPos, int yPos, int speed) {
+	public EnemyA(int xPos, int yPos, double speed) {
 		// TODO Auto-generated constructor stub
 		super(xPos, yPos, ENEMY_SRC, speed);
 	}

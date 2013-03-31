@@ -19,12 +19,12 @@ import javax.swing.ImageIcon;
  */
 public class Enemy {
 	
-	protected int x;
+	protected double x;
 	protected int y;
 	private boolean visible;
 	private int width, height;
 	private Image enemyImg;
-	protected int speed;
+	protected double speed;
 	
 	/**
 	 * Constructor de enemigos
@@ -32,7 +32,7 @@ public class Enemy {
 	 * @param yPos posición inicial en el eje Y
 	 * @param enemySrc imágen de la nave.
 	 */
-	public Enemy(int xPos, int yPos, String enemySrc, int speed) {
+	public Enemy(int xPos, int yPos, String enemySrc, double speed) {
 		// TODO Auto-generated constructor stub
 		visible = true;
 		// Imágen
@@ -52,7 +52,7 @@ public class Enemy {
 	 * Recoge valor de la nave en el eje horizontal
 	 * @return valor ejeX
 	 */
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -101,6 +101,6 @@ public class Enemy {
 	 * @return rectangle límites del elemento para detección de colisiones.
 	 */
 	public Rectangle getBounds(){
-		return new Rectangle(getX(), getY(), width, height);
+		return new Rectangle((int) getX(), getY(), width, height);
 	}
 }

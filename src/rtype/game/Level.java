@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -43,7 +42,7 @@ public class Level extends JPanel implements ActionListener{
 	private Timer time;
 	private static final int DELAY = 5; // Retardo para el Timer
 	private int enemiesKilled = 0;
-	private int enemySpeed;
+	private double enemySpeed;
 	
 	/**
 	 * Constructor e inicialización.
@@ -51,7 +50,6 @@ public class Level extends JPanel implements ActionListener{
 	 */
 	public Level(int difficulty) {
 		// TODO Auto-generated constructor stub
-		System.out.println("Dificultad: " + difficulty);
 		player = new Player();
 		enemiesA = new ArrayList<EnemyA>();
 		enemiesB = new ArrayList<EnemyB>();
@@ -92,23 +90,24 @@ public class Level extends JPanel implements ActionListener{
 			
 		case 1:
 			totalEnemies = 15;
-			enemySpeed = 2;
+			enemySpeed = 1.25;
 			break;
 			
 		case 2:
 			totalEnemies = 20;
-			enemySpeed = 3;
+			enemySpeed = 1.5;
 			break;
 			
 		case 3:
 			totalEnemies = 30;
-			enemySpeed = 4;
+			enemySpeed = 2;
 			break;			
 		}
 	}
 
 	/**
 	 * Creamos el array de enemigos según la dificultad seleccionada.
+	 * PENDIENTE!
 	 */
 	private void loadEnemies() {
 		// TODO Auto-generated method stub
@@ -229,8 +228,7 @@ public class Level extends JPanel implements ActionListener{
 			Rectangle bBounds = b.getBounds();
 			for (int j = 0; j < enemyBoundsA.size(); j++) {
 				if (b.isVisible() && enemiesA.get(j).isVisible() && bBounds.intersects(enemyBoundsA.get(j))) {
-					enemiesA.get(j).setVisible(false);
-					//enemies.remove(j); 
+					enemiesA.get(j).setVisible(false); 
 					b.setVisible(false);
 					enemiesKilled++;
 					totalEnemies--;
@@ -278,12 +276,12 @@ public class Level extends JPanel implements ActionListener{
 		
 		// Dibujamos enemigos tipo A.
 		for (int i = 0; i < enemiesA.size(); i++) {
-			g2d.drawImage(enemiesA.get(i).getImage(), enemiesA.get(i).getX(), enemiesA.get(i).getY(), null);
+			g2d.drawImage(enemiesA.get(i).getImage(), (int) enemiesA.get(i).getX(), enemiesA.get(i).getY(), null);
 		}
 		
 		// Dibujamos enemigos tipo B.
 		for (int i = 0; i < enemiesB.size(); i++) {
-			g2d.drawImage(enemiesB.get(i).getImage(), enemiesB.get(i).getX(), enemiesB.get(i).getY(), null);
+			g2d.drawImage(enemiesB.get(i).getImage(), (int) enemiesB.get(i).getX(), enemiesB.get(i).getY(), null);
 		}
 		
 		// HUD con datos de juego.
