@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
  *
  */
 
-public class Player {
+public class Jugador {
 	
 	// Posiciones de la nave en los ejes x e y.
 	private int x, y;
@@ -28,23 +28,23 @@ public class Player {
 	// Desplazamiento vertical.
 	private int dy;
 	// Ancho y alto de la imagen.
-	private int width, height;
-	private Image shipImg;
-	private static final String SHIP_IMG = "img/ship.png";
+	private int ancho, alto;
+	private Image imgNave;
+	private static final String SRC_IMG_NAVE = "img/ship.png";
 	// Disparos de la nave.
-	private ArrayList<Bullet> bullets;
+	private ArrayList<Bala> balas;
 	// Visibilidad de la nave.
 	private boolean visible;
 	// Retardo del último disparo.
-	private long lastFire = 0;	
+	private long ultimoDisparo = 0;	
 	
-	public Player(){
+	public Jugador(){
 		visible = true;
-		ImageIcon img = new ImageIcon(SHIP_IMG);
-		shipImg = img.getImage();
-		width = shipImg.getWidth(null);
-		height = shipImg.getHeight(null);
-		bullets = new ArrayList<Bullet>();
+		ImageIcon img = new ImageIcon(SRC_IMG_NAVE);
+		imgNave = img.getImage();
+		ancho = imgNave.getWidth(null);
+		alto = imgNave.getHeight(null);
+		balas = new ArrayList<Bala>();
 		x = 10;
 		y = 172;
 	}
@@ -52,7 +52,7 @@ public class Player {
 	/**
 	 * Movimiento horizontal y vertical de la nave.
 	 */
-	public void move(int maxWidth, int maxHeight){
+	public void mover(int maxWidth, int maxHeight){
 		// System.out.println(maxWidth - width);
 		// System.out.println(maxHeight - height);
 		
@@ -64,8 +64,8 @@ public class Player {
 		if(y < 1) y = 1;
 		
 		// Control de límites inferior y derecho.
-		if(x > maxWidth - width) x = maxWidth - width;
-		if(y > maxHeight - height) y = maxHeight - height;
+		if(x > maxWidth - ancho) x = maxWidth - ancho;
+		if(y > maxHeight - alto) y = maxHeight - alto;
 	}
 	
 	/**
@@ -89,22 +89,22 @@ public class Player {
 	 * @return Imagen.
 	 */
 	public Image getShipImage(){
-		return shipImg;
+		return imgNave;
 	}
 	
 	/**
 	 * Getter del listado de proyectiles disparados.
 	 * @return ArrayList.
 	 */
-	public ArrayList<Bullet> getBullets(){
-		return bullets;
+	public ArrayList<Bala> getBalas(){
+		return balas;
 	}
 	
 	/**
 	 * Devuelve la visibilidad de la nave.
 	 * @return
 	 */
-	public boolean isVisible(){
+	public boolean getVisible(){
 		return visible;
 	}
 	
@@ -143,9 +143,9 @@ public class Player {
 		
 		if (key == KeyEvent.VK_SPACE){
 			// Incluimos un retardo para que el disparo tenga un ritmo continuo y sin soltar ráfagas con balas sin separación.
-			if (System.currentTimeMillis() - lastFire > 175) {
-				lastFire = System.currentTimeMillis();
-				fire();
+			if (System.currentTimeMillis() - ultimoDisparo > 175) {
+				ultimoDisparo = System.currentTimeMillis();
+				disparar();
 			}
 		}
 	}
@@ -156,10 +156,10 @@ public class Player {
 	 * que recoge la posición x,y de la nave haciendo que el proyectil salga desde
 	 * el lado derecho de la nave y a mitad de altura de la misma.
 	 */
-	private void fire() {
+	private void disparar() {
 		// TODO Auto-generated method stub
-		if(isVisible()) bullets.add(new Bullet(x + width, y + height / 2));
-		// System.out.println(bullets.size());
+		if(getVisible()) balas.add(new Bala(x + ancho, y + alto / 2));
+		// System.out.println(balas.size());
 	}
 
 	/**
@@ -184,8 +184,8 @@ public class Player {
 	 * los ejes (x,y) y el tamaño de la imagen.
 	 * @return rectangle límites del elemento para detección de colisiones.
 	 */
-	public Rectangle getBounds(){
-		return new Rectangle(getX(), getY(), width, height);
+	public Rectangle getBordes(){
+		return new Rectangle(getX(), getY(), ancho, alto);
 	}
 	
 }

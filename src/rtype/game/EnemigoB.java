@@ -11,16 +11,16 @@ package rtype.game;
  *
  */
 
-public class EnemyB extends Enemy{
+public class EnemigoB extends Enemigo{
 
-	private static final String ENEMY_SRC = "img/enemyB_s.png";
+	private static final String SRC_IMG_ENEMIGO = "img/enemyB_s.png";
 	
 	/**
 	 * Constructor de enemigos
 	 */
-	public EnemyB(int xPos, int yPos, double speed) {
+	public EnemigoB(int posX, int posY, int velocidad) {
 		// TODO Auto-generated constructor stub
-		super(xPos, yPos, ENEMY_SRC, speed);
+		super(posX, posY, SRC_IMG_ENEMIGO, velocidad);
 	}
 	
 	/**
@@ -29,8 +29,8 @@ public class EnemyB extends Enemy{
 	 * La principal diferencia es que pueden moverse en el eje Y
 	 * @param dy desplazamiento aleatorio en ejeY generado.
 	 */
-	public void move(int dy){		
-		x += speed;
+	public void mover(int dy){		
+		x += velocidad;
 		y += dy;
 		
 		if(x > 800)

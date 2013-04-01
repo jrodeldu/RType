@@ -11,24 +11,24 @@ package rtype.game;
  *
  */
 
-public class EnemyA extends Enemy{
+public class EnemigoA extends Enemigo{
 	
-	private static String ENEMY_SRC = "img/enemyA_s.png";
+	private static String SRC_IMG_ENEMIGO = "img/enemyA_s.png";
 	
 	/**
 	 * Constructor de enemigos
 	 */
-	public EnemyA(int xPos, int yPos, double speed) {
+	public EnemigoA(int posX, int posY, int velocidad) {
 		// TODO Auto-generated constructor stub
-		super(xPos, yPos, ENEMY_SRC, speed);
+		super(posX, posY, SRC_IMG_ENEMIGO, velocidad);
 	}
 	
 	/**
 	 * Movimiento constante de las naves
 	 */
-	public void move(){
-		x -= speed;
-		if(x < 0-getWidth())
+	public void mover(){
+		x -= velocidad;
+		if(x < 0-getAncho())
 			x = 800;
 	}
 	

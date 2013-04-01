@@ -17,16 +17,16 @@ import javax.swing.ImageIcon;
  *
  */
 
-public class Bullet {
+public class Bala {
 
 	// Posición del proyectil.
 	private int x, y;
 	// Alto y ancho del proyectil.
-	private int width, height;
-	private static final int BULLET_SPEED = 3;
+	private int ancho, alto;
+	private static final int VELOCIDAD_BALA = 3;
 	private boolean visible;
-	private Image bulletImg;
-	private static final String BULLET_IMG = "img/bullet.png";
+	private Image imgBala;
+	private static final String SRC_IMG_BALA = "img/bullet.png";
 	
 	/**
 	 * Constructor del objeto.
@@ -34,17 +34,17 @@ public class Bullet {
 	 * @param x: Será el ancho total de la nave.
 	 * @param y: Será igual a la mitad de la altura de la nave.
 	 */
-	public Bullet(int x, int y) {
+	public Bala(int x, int y) {
 		// TODO Auto-generated constructor stub
 		// Posición incial del proyectil.
 		this.x = x;
 		this.y = y;
 		visible = true;
 		// Imágen
-		ImageIcon img = new ImageIcon(BULLET_IMG);
-		bulletImg = img.getImage();
-		width = bulletImg.getWidth(null);
-		height = bulletImg.getHeight(null);
+		ImageIcon img = new ImageIcon(SRC_IMG_BALA);
+		imgBala = img.getImage();
+		ancho = imgBala.getWidth(null);
+		alto = imgBala.getHeight(null);
 	}
 	
 	/**
@@ -67,15 +67,15 @@ public class Bullet {
 	 * Getter Imagen.
 	 * @return imagen del proyectil.
 	 */
-	public Image getImage(){
-		return bulletImg;
+	public Image getImagen(){
+		return imgBala;
 	}
 	
 	/**
 	 * Devuelve la visibilidad del proyectil.
 	 * @return
 	 */
-	public boolean isVisible(){
+	public boolean getVisible(){
 		return visible;
 	}
 	
@@ -91,8 +91,8 @@ public class Bullet {
 	 * Movimiento horizontal del proyectil.
 	 * @param maxWidth: Ancho máximo de la pantalla
 	 */
-	public void move(int maxWidth){
-		x += BULLET_SPEED;
+	public void mover(int maxWidth){
+		x += VELOCIDAD_BALA;
 		// Control de límite. Si se sale se cambia visibilidad del proyectil.
 		if(x > maxWidth) setVisible(false);
 	}
@@ -102,7 +102,7 @@ public class Bullet {
 	 * los ejes (x,y) y el tamaño de la imagen.
 	 * @return rectangle límites del elemento para detección de colisiones.
 	 */
-	public Rectangle getBounds(){
-		return new Rectangle(getX(), getY(), width, height);
+	public Rectangle getBordes(){
+		return new Rectangle(getX(), getY(), ancho, alto);
 	}
 }

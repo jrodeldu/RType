@@ -64,9 +64,10 @@ public class RType implements ActionListener{
 		difficulty.add(btnImposible.getText());
 		
 		frameMain.setVisible(true);
+
 	}
 	
-	public void play(int difficulty){
+	public void jugar(int difficulty){
 		JFrame frame = new JFrame();
 		
 		// Configuración del frame.
@@ -76,7 +77,7 @@ public class RType implements ActionListener{
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.add(new Level(difficulty));
+		frame.add(new Nivel(difficulty));
 		// Hacemos visitble el frame.
 		frame.setVisible(true);		
 	}
@@ -86,7 +87,7 @@ public class RType implements ActionListener{
 		// TODO Auto-generated method stub
 		// Jugamos pasando el índice de dificultad.
 		frameMain.dispose();
-		play(difficulty.indexOf(e.getActionCommand()));
+		jugar(difficulty.indexOf(e.getActionCommand()));
 	}
 	
 	public static void main(String[] args){

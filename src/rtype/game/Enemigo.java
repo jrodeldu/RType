@@ -17,14 +17,14 @@ import javax.swing.ImageIcon;
  * @author Jonatan Rodríguez Elduayen jrodeldu
  *
  */
-public class Enemy {
+public class Enemigo {
 	
-	protected double x;
+	protected int x;
 	protected int y;
 	private boolean visible;
-	private int width, height;
-	private Image enemyImg;
-	protected double speed;
+	private int ancho, alto;
+	private Image imgEnemigo;
+	protected int velocidad;
 	
 	/**
 	 * Constructor de enemigos
@@ -32,18 +32,18 @@ public class Enemy {
 	 * @param yPos posición inicial en el eje Y
 	 * @param enemySrc imágen de la nave.
 	 */
-	public Enemy(int xPos, int yPos, String enemySrc, double speed) {
+	public Enemigo(int xPos, int yPos, String enemySrc, int velocidad) {
 		// TODO Auto-generated constructor stub
 		visible = true;
 		// Imágen
 		ImageIcon img = new ImageIcon(enemySrc);
-		enemyImg = img.getImage();
-		width = enemyImg.getWidth(null);
-		height = enemyImg.getHeight(null);
+		imgEnemigo = img.getImage();
+		ancho = imgEnemigo.getWidth(null);
+		alto = imgEnemigo.getHeight(null);
 		// Generar posición aleatoriamente.
 		x = xPos;
 		y = yPos;
-		this.speed = speed;
+		this.velocidad = velocidad;
 	}
 	
 	/* Getters y Setters */
@@ -52,7 +52,7 @@ public class Enemy {
 	 * Recoge valor de la nave en el eje horizontal
 	 * @return valor ejeX
 	 */
-	public double getX() {
+	public int getX() {
 		return x;
 	}
 
@@ -68,7 +68,7 @@ public class Enemy {
 	 * Recupera valor de visibilidad del enemigo
 	 * @return
 	 */
-	public boolean isVisible() {
+	public boolean getVisible() {
 		return visible;
 	}
 
@@ -84,15 +84,15 @@ public class Enemy {
 	 * Getter Image del enemigo
 	 * @return imagen de la nave enemiga.
 	 */
-	public Image getImage() {
-		return enemyImg;
+	public Image getImagen() {
+		return imgEnemigo;
 	}
 
 	/**
 	 * @return width de la imagen de la nave enemiga.
 	 */
-	public int getWidth() {
-		return width;
+	public int getAncho() {
+		return ancho;
 	}
 	
 	/**
@@ -100,7 +100,7 @@ public class Enemy {
 	 * los ejes (x,y) y el tamaño de la imagen.
 	 * @return rectangle límites del elemento para detección de colisiones.
 	 */
-	public Rectangle getBounds(){
-		return new Rectangle((int) getX(), getY(), width, height);
+	public Rectangle getBordes(){
+		return new Rectangle((int) getX(), getY(), ancho, alto);
 	}
 }
