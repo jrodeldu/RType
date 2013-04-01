@@ -101,6 +101,6 @@ public class Enemigo {
 	 * @return rectangle límites del elemento para detección de colisiones.
 	 */
 	public Rectangle getBordes(){
-		return new Rectangle((int) getX(), getY(), ancho, alto);
+		return new Rectangle(getX(), getY(), ancho, alto);
 	}
 }

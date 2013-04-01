@@ -88,7 +88,7 @@ public class Jugador {
 	 * Getter de la imagen de la nave.
 	 * @return Imagen.
 	 */
-	public Image getShipImage(){
+	public Image getImagen(){
 		return imgNave;
 	}
 	

@@ -72,7 +72,7 @@ public class Nivel extends JPanel implements ActionListener{
 		imgFondo = img.getImage();
 		
 		// Inicializar los Enemigos.
-		loadEnemies();
+		cargarEnemigos();
 		
 		// timerr inicializado a 5ms.
 		timer = new Timer(RETARDO, this);
@@ -94,17 +94,17 @@ public class Nivel extends JPanel implements ActionListener{
 			
 		case 1:
 			totalEnemigos = 15;
-			velocidadEnemigos = 1;
+			velocidadEnemigos = 2;
 			break;
 			
 		case 2:
 			totalEnemigos = 20;
-			velocidadEnemigos = 1;
+			velocidadEnemigos = 2;
 			break;
 			
 		case 3:
 			totalEnemigos = 30;
-			velocidadEnemigos = 2;
+			velocidadEnemigos = 2 ;
 			break;			
 		}
 	}
@@ -113,10 +113,17 @@ public class Nivel extends JPanel implements ActionListener{
 	 * Creamos el array de enemigos según la dificultad seleccionada.
 	 * PENDIENTE!
 	 */
-	private void loadEnemies() {
+	private void cargarEnemigos() {
 		// TODO Auto-generated method stub
 		Random ran = new Random();
 		int x,y;
+		
+		int j;
+		
+		for (int i = 0; i < totalEnemigos; i++) {
+			j = ran.nextInt(2);
+			System.out.println(j);
+		}
 		
 		for (int i = 0; i < totalEnemigos/2; i++) {
 			// Posición en el eje vertical y horizontal aleatoria del enemigo.
@@ -124,7 +131,8 @@ public class Nivel extends JPanel implements ActionListener{
 			y = ran.nextInt(ALTO_PANTALLA-100);
 			// System.out.println(x + " - " + y);
 			enemigosA.add(new EnemigoA(x, y, velocidadEnemigos));
-			x = ran.nextInt(100)-400;
+			// x = ran.nextInt(100)-400;
+			x = ran.nextInt(200) + ANCHO_PANTALLA;
 			enemigosB.add(new EnemigoB(x, y, velocidadEnemigos));
 		}
 		
@@ -266,7 +274,7 @@ public class Nivel extends JPanel implements ActionListener{
 		
 		// Dibujamos nave sólo si sigue viva (visible)
 		if(jugador.getVisible()){
-			g2d.drawImage(jugador.getShipImage(), jugador.getX(), jugador.getY(), null);
+			g2d.drawImage(jugador.getImagen(), jugador.getX(), jugador.getY(), null);
 		}
 			
 		

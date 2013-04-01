@@ -2,10 +2,10 @@ package rtype.game;
 
 /**
  * Clase de los enemigos tipo A del juego.
- * Las naves enemigas son de 2 tipos (A y B)
  * 
- * Ningún enemigo efectúa disparos. Simplemente se mueven en su eje X
- * y si llegan al final de la pantalla vivos vuelven a aparecer.
+ * La nave no efectúa ningún disparo, su movimiento
+ * es constante de derecha a izquierda y va variando
+ * su eje Y de forma aleatoria.
  * 
  * @author Jonatan Rodríguez Elduayen jrodeldu
  *
@@ -30,11 +30,11 @@ public class EnemigoB extends Enemigo{
 	 * @param dy desplazamiento aleatorio en ejeY generado.
 	 */
 	public void mover(int dy){		
-		x += velocidad;
+		x -= velocidad;
 		y += dy;
 		
-		if(x > 800)
-			x = 0;
+		if(x < 0-getAncho())
+			x = 800;
 	}
 	
 }
