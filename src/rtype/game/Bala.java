@@ -6,9 +6,9 @@ import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 /**
- * Clase Bullet. 
+ * Clase Bala. 
  * 
- * Proyectiles de la nave.
+ * Disparos de la nave.
  * 
  * Recorren el eje horizontal sin alterar su trayectoria.
  * Se perderán en el eje si no impactan con ningún enemigo.
@@ -19,9 +19,9 @@ import javax.swing.ImageIcon;
 
 public class Bala {
 
-	// Posición del proyectil.
+	// Posición inicial de la bala.
 	private int x, y;
-	// Alto y ancho del proyectil.
+	// Alto y ancho de la bala.
 	private int ancho, alto;
 	private static final int VELOCIDAD_BALA = 3;
 	private boolean visible;
@@ -31,11 +31,11 @@ public class Bala {
 	/**
 	 * Constructor del objeto.
 	 * La bala saldrá desde la posición x e y que tenía la nave al disparar.
+	 * 
 	 * @param x: Será el ancho total de la nave.
 	 * @param y: Será igual a la mitad de la altura de la nave.
 	 */
 	public Bala(int x, int y) {
-		// TODO Auto-generated constructor stub
 		// Posición incial del proyectil.
 		this.x = x;
 		this.y = y;
@@ -48,32 +48,28 @@ public class Bala {
 	}
 	
 	/**
-	 * Getter eje X.
-	 * @return posición X
+	 * @return x posición eje X
 	 */
 	public int getX(){
 		return x;
 	}
 
 	/**
-	 * Getter eje y.
-	 * @return posición y.
+	 * @return y posición eje Y.
 	 */
 	public int getY(){
 		return y;
 	}
 	
 	/**
-	 * Getter Imagen.
-	 * @return imagen del proyectil.
+	 * @return imgBala imagen del proyectil.
 	 */
 	public Image getImagen(){
 		return imgBala;
 	}
 	
 	/**
-	 * Devuelve la visibilidad del proyectil.
-	 * @return
+	 * @return visible
 	 */
 	public boolean getVisible(){
 		return visible;
@@ -98,8 +94,9 @@ public class Bala {
 	}
 	
 	/**
-	 * Creamos un rectángulo que rodee el proyectil tomando su posición en
+	 * Creamos un rectángulo que rodea la bala tomando su posición en
 	 * los ejes (x,y) y el tamaño de la imagen.
+	 * 
 	 * @return rectangle límites del elemento para detección de colisiones.
 	 */
 	public Rectangle getBordes(){

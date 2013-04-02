@@ -13,6 +13,8 @@ import javax.swing.ImageIcon;
  * Permite movimiento con teclas Q,A,O,P: arriba, abajo, izquierda y derecha respectivamente
  * como también controles clásicos con las flechas de dirección.
  * 
+ * La nave se puede mover por toda la ventana sin salir de los límites.
+ * 
  * Tecla espacio encargada de disparar.
  * 
  * @author Jonatan Rodríguez Elduayen jrodeldu
@@ -53,8 +55,6 @@ public class Jugador {
 	 * Movimiento horizontal y vertical de la nave.
 	 */
 	public void mover(int maxWidth, int maxHeight){
-		// System.out.println(maxWidth - width);
-		// System.out.println(maxHeight - height);
 		
 		x = x + dx;
 		y = y + dy;
@@ -69,40 +69,35 @@ public class Jugador {
 	}
 	
 	/**
-	 * Getter de la posición X.
-	 * @return posición X
+	 * @return x posición eje X.
 	 */
 	public int getX(){
 		return x;
 	}
 
 	/**
-	 * Getter de la posición Y.
-	 * @return posición Y
+	 * @return y posición eje Y.
 	 */
 	public int getY(){
 		return y;
 	}
 	
 	/**
-	 * Getter de la imagen de la nave.
-	 * @return Imagen.
+	 * @return imgNave Imagen de la nave.
 	 */
 	public Image getImagen(){
 		return imgNave;
 	}
 	
 	/**
-	 * Getter del listado de proyectiles disparados.
-	 * @return ArrayList.
+	 * @return ArrayList con las balas disparadas.
 	 */
 	public ArrayList<Bala> getBalas(){
 		return balas;
 	}
 	
 	/**
-	 * Devuelve la visibilidad de la nave.
-	 * @return
+	 * @return visible.
 	 */
 	public boolean getVisible(){
 		return visible;
@@ -110,7 +105,7 @@ public class Jugador {
 	
 	/**
 	 * Establece visibilidad de la nave.
-	 * @param visible
+	 * @param visible.
 	 */
 	public void setVisible(boolean visible){
 		this.visible = visible;
@@ -142,7 +137,7 @@ public class Jugador {
 		}
 		
 		if (key == KeyEvent.VK_SPACE){
-			// Incluimos un retardo para que el disparo tenga un ritmo continuo y sin soltar ráfagas con balas sin separación.
+			// Incluimos un retardo para que el disparo tenga un ritmo continuo y sin soltar ráfagas con balas superpuestas.
 			if (System.currentTimeMillis() - ultimoDisparo > 175) {
 				ultimoDisparo = System.currentTimeMillis();
 				disparar();
@@ -154,12 +149,10 @@ public class Jugador {
 	 * Si la nave está visible dispara un proyectil y se añade a la colección de disparos.
 	 * Se crea un nuevo objeto Bullet con posición definita por una fórmula
 	 * que recoge la posición x,y de la nave haciendo que el proyectil salga desde
-	 * el lado derecho de la nave y a mitad de altura de la misma.
+	 * el lado derecho de la nave y a mitad de altura de la misma que es dónde se situa el cañon.
 	 */
 	private void disparar() {
-		// TODO Auto-generated method stub
 		if(getVisible()) balas.add(new Bala(x + ancho, y + alto / 2));
-		// System.out.println(balas.size());
 	}
 
 	/**
