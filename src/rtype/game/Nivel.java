@@ -228,22 +228,22 @@ public class Nivel extends JPanel implements ActionListener{
 	private void setTotalEnemigos() {
 		// TODO Auto-generated method stub
 		switch (getDificultad()) {
-		case 0:
+		case 0: // Facil
 			totalEnemigos = 10;
 			velocidadEnemigos = 1;
 			break;
 			
-		case 1:
+		case 1: // Normal
 			totalEnemigos = 15;
 			velocidadEnemigos = 2;
 			break;
 			
-		case 2:
+		case 2: // Complicado
 			totalEnemigos = 20;
 			velocidadEnemigos = 2;
 			break;
 			
-		case 3:
+		case 3: // Imposible
 			totalEnemigos = 30;
 			velocidadEnemigos = 2 ;
 			break;			
@@ -262,7 +262,7 @@ public class Nivel extends JPanel implements ActionListener{
 		
 		for (int i = 0; i < totalEnemigos; i++) {
 			// Posición en el eje vertical y horizontal aleatoria del enemigo.
-			x = ran.nextInt(200) + ANCHO_PANTALLA;
+			x = ran.nextInt(500) + ANCHO_PANTALLA;
 			y = ran.nextInt(ALTO_PANTALLA-100);
 			// Tipo de nave que se crea. O nave tipo A / 1 nave tipo B
 			tipo = ran.nextInt(2);

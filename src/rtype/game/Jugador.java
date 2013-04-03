@@ -1,11 +1,7 @@
 package rtype.game;
 
-import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
 
 /**
  * Clase Juagador encargada del comportamiento de la nave del jugador.
@@ -21,34 +17,22 @@ import javax.swing.ImageIcon;
  *
  */
 
-public class Jugador {
+public class Jugador extends Nave{
 	
-	// Posiciones de la nave en los ejes x e y.
-	private int x, y;
+	private static final int VELOCIDAD_JUGADOR = 1;
+	private static final String SRC_IMG_NAVE = "img/ship.png";
 	// Desplazamiento horizontal.
 	private int dx;
 	// Desplazamiento vertical.
 	private int dy;
-	// Ancho y alto de la imagen.
-	private int ancho, alto;
-	private Image imgNave;
-	private static final String SRC_IMG_NAVE = "img/ship.png";
 	// Disparos de la nave.
 	private ArrayList<Bala> balas;
-	// Visibilidad de la nave.
-	private boolean visible;
 	// Retardo del último disparo.
 	private long ultimoDisparo = 0;	
 	
 	public Jugador(){
-		visible = true;
-		ImageIcon img = new ImageIcon(SRC_IMG_NAVE);
-		imgNave = img.getImage();
-		ancho = imgNave.getWidth(null);
-		alto = imgNave.getHeight(null);
+		super(10, 172, SRC_IMG_NAVE, VELOCIDAD_JUGADOR);
 		balas = new ArrayList<Bala>();
-		x = 10;
-		y = 172;
 	}
 
 	/**
@@ -60,33 +44,12 @@ public class Jugador {
 		y = y + dy;
 		
 		// Control de límites superior e izquierdo.
-		if(x < 1) x = 1;
-		if(y < 1) y = 1;
+		if(x < 0) x = 0;
+		if(y < 0) y = 0;
 		
 		// Control de límites inferior y derecho.
-		if(x > maxWidth - ancho) x = maxWidth - ancho;
-		if(y > maxHeight - alto) y = maxHeight - alto;
-	}
-	
-	/**
-	 * @return x posición eje X.
-	 */
-	public int getX(){
-		return x;
-	}
-
-	/**
-	 * @return y posición eje Y.
-	 */
-	public int getY(){
-		return y;
-	}
-	
-	/**
-	 * @return imgNave Imagen de la nave.
-	 */
-	public Image getImagen(){
-		return imgNave;
+		if(x > maxWidth - getAncho()) x = maxWidth - getAncho();
+		if(y > maxHeight - getAlto()) y = maxHeight - getAlto();
 	}
 	
 	/**
@@ -95,21 +58,6 @@ public class Jugador {
 	public ArrayList<Bala> getBalas(){
 		return balas;
 	}
-	
-	/**
-	 * @return visible.
-	 */
-	public boolean getVisible(){
-		return visible;
-	}
-	
-	/**
-	 * Establece visibilidad de la nave.
-	 * @param visible.
-	 */
-	public void setVisible(boolean visible){
-		this.visible = visible;
-	}	
 	
 	/**
 	 * Movimientos al pulsar los botones de dirección.
@@ -152,7 +100,7 @@ public class Jugador {
 	 * el lado derecho de la nave y a mitad de altura de la misma que es dónde se situa el cañon.
 	 */
 	private void disparar() {
-		if(getVisible()) balas.add(new Bala(x + ancho, y + alto / 2));
+		if(getVisible()) balas.add(new Bala(x + getAncho(), y + getAlto() / 2));
 	}
 
 	/**
@@ -170,15 +118,6 @@ public class Jugador {
 		if(key == KeyEvent.VK_Q || key == KeyEvent.VK_A || key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
 			dy = 0;  
 		}
-	}
-	
-	/**
-	 * Creamos un rectángulo que rodee el elemento tomando su posición en
-	 * los ejes (x,y) y el tamaño de la imagen.
-	 * @return rectangle límites del elemento para detección de colisiones.
-	 */
-	public Rectangle getBordes(){
-		return new Rectangle(getX(), getY(), ancho, alto);
 	}
 	
 }

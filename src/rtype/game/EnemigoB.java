@@ -11,7 +11,7 @@ package rtype.game;
  *
  */
 
-public class EnemigoB extends Enemigo{
+public class EnemigoB extends Nave{
 
 	private static final String SRC_IMG_ENEMIGO = "img/enemyB_s.png";
 	
@@ -33,8 +33,12 @@ public class EnemigoB extends Enemigo{
 		x -= velocidad;
 		y += dy;
 		
-		if(x < 0-getAncho())
-			x = 800;
+		if(x < 0-getAncho()) x = 800;
+		if(y < 1) y = 1;
+		
+		// Control de límites inferior y derecho.
+		//if(x > maxWidth - getAncho()) x = maxWidth - getAncho();
+		//if(y > maxHeight - getAlto()) y = maxHeight - getAlto();
 	}
 	
 }

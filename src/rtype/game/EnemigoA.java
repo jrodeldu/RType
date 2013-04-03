@@ -10,7 +10,7 @@ package rtype.game;
  *
  */
 
-public class EnemigoA extends Enemigo{
+public class EnemigoA extends Nave{
 	
 	private static String SRC_IMG_ENEMIGO = "img/enemyA_s.png";
 	

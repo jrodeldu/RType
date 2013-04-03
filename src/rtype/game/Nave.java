@@ -17,29 +17,29 @@ import javax.swing.ImageIcon;
  * @author Jonatan Rodríguez Elduayen jrodeldu
  *
  */
-public class Enemigo {
+public class Nave {
 	
 	protected int x;
 	protected int y;
 	private boolean visible;
 	private int ancho, alto;
-	private Image imgEnemigo;
+	private Image imgNave;
 	protected int velocidad;
 	
 	/**
 	 * Constructor de enemigos
 	 * @param xPos posición inicial en el eje X
 	 * @param yPos posición inicial en el eje Y
-	 * @param enemySrc imágen de la nave.
+	 * @param srcImgNave imágen de la nave.
 	 */
-	public Enemigo(int xPos, int yPos, String enemySrc, int velocidad) {
+	public Nave(int xPos, int yPos, String srcImgNave, int velocidad) {
 		// TODO Auto-generated constructor stub
 		visible = true;
 		// Imágen
-		ImageIcon img = new ImageIcon(enemySrc);
-		imgEnemigo = img.getImage();
-		ancho = imgEnemigo.getWidth(null);
-		alto = imgEnemigo.getHeight(null);
+		ImageIcon img = new ImageIcon(srcImgNave);
+		imgNave = img.getImage();
+		ancho = imgNave.getWidth(null);
+		alto = imgNave.getHeight(null);
 		// Generar posición aleatoriamente.
 		x = xPos;
 		y = yPos;
@@ -73,7 +73,7 @@ public class Enemigo {
 	}
 
 	/**
-	 * Establece valor visible del enemigo.
+	 * Establece valor visible de la nave.
 	 * @param visible: si está vivo será true, si no, falso.
 	 */
 	public void setVisible(boolean visible) {
@@ -81,18 +81,24 @@ public class Enemigo {
 	}
 
 	/**
-	 * Getter Image del enemigo
-	 * @return imagen de la nave enemiga.
+	 * @return imagen de la nave.
 	 */
 	public Image getImagen() {
-		return imgEnemigo;
+		return imgNave;
 	}
 
 	/**
-	 * @return width de la imagen de la nave enemiga.
+	 * @return ancho de la imagen de la nave.
 	 */
 	public int getAncho() {
 		return ancho;
+	}
+	
+	/**
+	 * @return alto de la imagen de la nave.
+	 */
+	public int getAlto(){
+		return alto;
 	}
 	
 	/**
@@ -101,6 +107,6 @@ public class Enemigo {
 	 * @return rectangle límites del elemento para detección de colisiones.
 	 */
 	public Rectangle getBordes(){
-		return new Rectangle(getX(), getY(), ancho, alto);
+		return new Rectangle(getX(), getY(), getAncho(), getAncho());
 	}
 }
