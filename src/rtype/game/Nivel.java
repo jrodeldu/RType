@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -75,8 +76,6 @@ public class Nivel extends JPanel implements ActionListener{
 		// Extendemos de JPanel y establecemos foco en el elemento para que pueda reaccionar a eventos de teclado.
 		setFocusable(true);
 		
-		setDoubleBuffered(true);
-		
 		// timer inicializado a 5ms. Ejecutará la función actionPerformed.
 		timer = new Timer(RETARDO, this);
 		timer.start();
@@ -137,21 +136,13 @@ public class Nivel extends JPanel implements ActionListener{
 		
 		// Si se han eliminado todos los enemigos o el jugador ha chocado con una nave enemiga fin del juego y vuelta al menú.
 		if (getTotalEnemigos() == 0) {
-			timer.stop();
-			JOptionPane.showMessageDialog(null, "¡HAS GANADO!", "Juego terminado", JOptionPane.INFORMATION_MESSAGE);
-			// Recuperamos la ventana contenedora y la cerramos y lanzamos el menú.
-			Window ventana = SwingUtilities.getWindowAncestor(this);
-			ventana.dispose();
-			new RType();
+			// forzamos repain para que actualice la imágen con todos los enemigos borrados.
+			repaint();
+			finJuego(true);
 		}
 		
 		if( ! jugador.getVisible()){
-			timer.stop();
-			JOptionPane.showMessageDialog(null, "¡HAS PERDIDO!", "Juego terminado", JOptionPane.INFORMATION_MESSAGE);
-			// Recuperamos la ventana contenedora y la cerramos y lanzamos el menú.
-			Window ventana = SwingUtilities.getWindowAncestor(this);
-			ventana.dispose();
-			new RType();
+			finJuego(false);
 		}
 		
 		// Control de colisiones
@@ -262,7 +253,9 @@ public class Nivel extends JPanel implements ActionListener{
 		
 		for (int i = 0; i < totalEnemigos; i++) {
 			// Posición en el eje vertical y horizontal aleatoria del enemigo.
-			x = ran.nextInt(500) + ANCHO_PANTALLA;
+			// Profundidad para aparición de enemigos poco a poco.
+			x = ran.nextInt(ANCHO_PANTALLA) + ANCHO_PANTALLA;
+			System.out.println(x);
 			y = ran.nextInt(ALTO_PANTALLA-100);
 			// Tipo de nave que se crea. O nave tipo A / 1 nave tipo B
 			tipo = ran.nextInt(2);
@@ -278,29 +271,36 @@ public class Nivel extends JPanel implements ActionListener{
 	/**
 	 * Control de colisiones entre nave del jugador y enemigos y entre
 	 * balas con naves enemigas.
+	 * 
+	 * El control de colisiones se implementa usando una técnica básica
+	 * que rodea los elementos con un rectángulo y comprobando si éstos
+	 * intersectan en algún momento.
+	 * 
+	 * No es un método 100% fiable ya que habría que mejorarlo implementando
+	 * alguna técnica más avanzada como pixel perfect.
 	 */
 	private void comprobarColisiones() {
 		// Área de colisión de la nave del jugador
 		Rectangle limitesJugador = jugador.getBordes();
 		
-		ArrayList<Rectangle> BordesEnemigoA = new ArrayList<Rectangle>();
-		ArrayList<Rectangle> BordesEnemigoB = new ArrayList<Rectangle>();
+		ArrayList<Rectangle> A = new ArrayList<Rectangle>();
+		ArrayList<Rectangle> B = new ArrayList<Rectangle>();
 		
 		// Creamos áreas de colisiones en los enemigos
 		for (int i = 0; i < enemigosA.size(); i++) {
 			EnemigoA enemigo = enemigosA.get(i);
-			Rectangle enBounds = enemigo.getBordes();
-			BordesEnemigoA.add(enBounds);
-			if(jugador.getVisible() && limitesJugador.intersects(enBounds)){
+			Rectangle bordesEnemigo = enemigo.getBordes();
+			A.add(bordesEnemigo);
+			if(jugador.getVisible() && limitesJugador.intersects(bordesEnemigo)){
 				jugador.setVisible(false);
 			}
 		}
 		
 		for (int i = 0; i < enemigosB.size(); i++) {
 			EnemigoB enemigo = enemigosB.get(i);
-			Rectangle enBounds = enemigo.getBordes();
-			BordesEnemigoB.add(enBounds);
-			if(jugador.getVisible() && limitesJugador.intersects(enBounds)){
+			Rectangle bordesEnemigo = enemigo.getBordes();
+			B.add(bordesEnemigo);
+			if(jugador.getVisible() && limitesJugador.intersects(bordesEnemigo)){
 				jugador.setVisible(false);
 			}
 		}
@@ -309,25 +309,47 @@ public class Nivel extends JPanel implements ActionListener{
 		// si colisionan con los límites de los enemigos
 		ArrayList<Bala> balas = jugador.getBalas();
 		for (int i = 0; i < balas.size(); i++) {
-			Bala b = balas.get(i);
-			Rectangle bBounds = b.getBordes();
-			for (int j = 0; j < BordesEnemigoA.size(); j++) {
-				if (b.getVisible() && enemigosA.get(j).getVisible() && bBounds.intersects(BordesEnemigoA.get(j))) {
+			Bala bala = balas.get(i);
+			Rectangle bordesBala = bala.getBordes();
+			for (int j = 0; j < A.size(); j++) {
+				if (bala.getVisible() && enemigosA.get(j).getVisible() && bordesBala.intersects(A.get(j))) {
 					enemigosA.get(j).setVisible(false); 
-					b.setVisible(false);
+					bala.setVisible(false);
 					enemigosEliminados++;
 					totalEnemigos--;
 				}
 			}
-			for (int j = 0; j < BordesEnemigoB.size(); j++) {
-				if (b.getVisible() && enemigosB.get(j).getVisible() && bBounds.intersects(BordesEnemigoB.get(j))) {
+			for (int j = 0; j < B.size(); j++) {
+				if (bala.getVisible() && enemigosB.get(j).getVisible() && bordesBala.intersects(B.get(j))) {
 					enemigosB.get(j).setVisible(false);
-					b.setVisible(false);
+ 					bala.setVisible(false);
 					enemigosEliminados++;
 					totalEnemigos--;
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Función para mostrar mensaje de victoria o derrota y fin del juego.
+	 * Una vez mostrado el mensaje se volverá a cargar el menú principal.
+	 * 
+	 * @param victoria booleano para saber si el jugador ganó o perdió
+	 */
+	private void finJuego(boolean victoria){
+		// Recuperamos la ventana contenedora y la cerramos y lanzamos el menú.
+		Window ventana = SwingUtilities.getWindowAncestor(this);
+		// Paramos timer.
+		timer.stop();
+		
+		if (victoria) {
+			JOptionPane.showMessageDialog(null, "¡HAS GANADO!", "Juego terminado", JOptionPane.INFORMATION_MESSAGE);
+		}else{
+			JOptionPane.showMessageDialog(null, "¡HAS PERDIDO!", "Juego terminado", JOptionPane.INFORMATION_MESSAGE);			
+		}
+		
+		ventana.dispose();
+		new RType();
 	}
 
 	/**
