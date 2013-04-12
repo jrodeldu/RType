@@ -119,16 +119,8 @@ public class Nivel extends JPanel implements ActionListener{
 		for (int i = 0; i < enemigosB.size(); i++) {
 			EnemigoB enemigo = enemigosB.get(i);
 			if(enemigo.getVisible()){
-				// Movmiento aleatorio. Control de que no se salga de los límites de alto de pantalla
-				ran = dy.nextInt(2);
-				if(ran == 0 && enemigo.getY() > 0){
-					y = -1;
-				}else if(ran > 0 && enemigo.getY() < ALTO_PANTALLA){ 
-					y = 1;
-				}else{
-					y = 0;
-				}
-				enemigo.mover(y);
+				// Movmiento aleatorio. Se pasa el máximo de alto para que no se salga de los límites de pantalla.
+				enemigo.mover(ALTO_PANTALLA);
 			}else{
 				enemigosB.remove(i);
 			}

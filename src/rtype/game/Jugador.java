@@ -40,8 +40,8 @@ public class Jugador extends Nave{
 	 */
 	public void mover(int maxWidth, int maxHeight){
 		
-		x = x + dx;
-		y = y + dy;
+		x += dx;
+		y += dy;
 		
 		// Control de límites superior e izquierdo.
 		if(x < 0) x = 0;

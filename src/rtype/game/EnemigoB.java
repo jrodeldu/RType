@@ -1,5 +1,7 @@
 package rtype.game;
 
+import java.util.Random;
+
 /**
  * Clase de los enemigos tipo A del juego.
  * 
@@ -29,12 +31,21 @@ public class EnemigoB extends Nave{
 	 * La principal diferencia es que pueden moverse en el eje Y
 	 * @param dy desplazamiento aleatorio en ejeY generado.
 	 */
-	public void mover(int dy){		
-		x -= velocidad;
-		y += dy;
+	public void mover(int maxY){		
+		Random ran = new Random();
+		int i = ran.nextInt(2);
 		
+		if(i == 1){
+			y -= 1;
+		}else{ 
+			y += 1;
+		}
+		
+		x -= velocidad;
+
 		if(x < 0-getAncho()) x = 800;
-		if(y < 1) y = 1;
+		if(y < 0) y = 0;
+		if(y > maxY - getAlto()) y = maxY - getAlto();
 		
 		// Control de límites inferior y derecho.
 		//if(x > maxWidth - getAncho()) x = maxWidth - getAncho();
