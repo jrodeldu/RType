@@ -46,8 +46,6 @@ public class Nivel extends JPanel implements ActionListener{
 	private Image imgFondo;
 	private Timer timer;
 	private int dificultad;
-	private ArrayList<EnemigoA> enemigosA;
-	private ArrayList<EnemigoB> enemigosB;
 	// Total de enemigos según dificultad elegida.
 	private int totalEnemigos;
 	private Jugador jugador;
@@ -63,8 +61,6 @@ public class Nivel extends JPanel implements ActionListener{
 		// TODO Auto-generated constructor stub
 		// Inicializamos variables.
 		jugador = new Jugador(this);
-		enemigosA = new ArrayList<EnemigoA>();
-		enemigosB = new ArrayList<EnemigoB>();
 		navesEnemigas = new ArrayList<Nave>();
 		this.dificultad = dificultad;
 		// Dejamos preparado la imágen de fondo para dibujarla en el panel.
@@ -117,9 +113,8 @@ public class Nivel extends JPanel implements ActionListener{
 			String tipo = navesEnemigas.get(i).getTipoNave();
 			if (tipo == "A") {
 				EnemigoA enemigo = (EnemigoA) navesEnemigas.get(i);
-				System.out.println(enemigo.getVisible());
 				if(enemigo.getVisible()){
-					enemigo.mover();
+					enemigo.mover(this);
 				}else{
 					navesEnemigas.remove(i);
 				}
@@ -127,7 +122,7 @@ public class Nivel extends JPanel implements ActionListener{
 			if (tipo == "B") {
 				EnemigoB enemigo = (EnemigoB) navesEnemigas.get(i);
 				if(enemigo.getVisible()){
-					enemigo.mover(ALTO_PANTALLA);
+					enemigo.mover(this);
 				}else{
 					navesEnemigas.remove(i);
 				}

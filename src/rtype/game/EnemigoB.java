@@ -16,6 +16,8 @@ import java.util.Random;
 public class EnemigoB extends Nave{
 
 	private static final String SRC_IMG_ENEMIGO = "img/enemyB_s.png";
+	private boolean subiendo; // Sentido ascendente de la nave
+	private int variacionY, dy; // Variacion vertical de la nave y desplazamiento efectuado dentro de la variacion.
 	
 	/**
 	 * Constructor de enemigos
@@ -24,6 +26,9 @@ public class EnemigoB extends Nave{
 		// TODO Auto-generated constructor stub
 		super(posX, posY, SRC_IMG_ENEMIGO, velocidad);
 		super.setTipoNave("B");
+		subiendo = true; // Todas las naves empiezan subiendo.
+		variacionY = new Random().nextInt(100)+50; // Random de desplazamiento.
+		dy = variacionY;
 	}
 	
 	/**
@@ -32,25 +37,50 @@ public class EnemigoB extends Nave{
 	 * La principal diferencia es que pueden moverse en el eje Y
 	 * @param dy desplazamiento aleatorio en ejeY generado.
 	 */
-	public void mover(int maxY){		
-		Random ran = new Random();
-		int i = ran.nextInt(2);
+	public void mover(Nivel nivel){		
 		
-		if(i == 1){
+		// Si la nave sube
+		if (getSubiendo()) {
 			y -= 1;
-		}else{ 
+			dy--;
+			// Si ha realizado su recorrido en su rango de variación en ejeY se cambia el sentido.
+			if (dy == 0) {
+				setSubiendo(false);
+			}
+		}else{
 			y += 1;
+			dy++;
+			// Si ha realizado su recorrido en su rango de variación en ejeY se cambia el sentido.
+			if (dy == variacionY) {
+				setSubiendo(true);
+			}
 		}
 		
+		// Desplazamiento constante en eje X.
 		x -= velocidad;
 
-		if(x < 0-getAncho()) x = 800;
+		// Recolocar la nave en la derecha una vez llegado a la izquierda.
+		if(x < 0-getAncho()) x = nivel.getWidth();
+		// Control límite superior eje Y
 		if(y < 0) y = 0;
-		if(y > maxY - getAlto()) y = maxY - getAlto();
-		
-		// Control de límites inferior y derecho.
-		//if(x > maxWidth - getAncho()) x = maxWidth - getAncho();
-		//if(y > maxHeight - getAlto()) y = maxHeight - getAlto();
+		// Control límite inferior eje Y
+		if(y > nivel.getHeight() - getAlto()) y = nivel.getHeight() - getAlto();
+	}
+	
+	/**
+	 * Recupera el sentido del desplazamiento vertical de la nave.
+	 * @return subiendo: la nave sube o baja
+	 */
+	public boolean getSubiendo() {
+		return subiendo;
+	}
+	
+	/**
+	 * Establecemos si la nave sube o baja.
+	 * @param subiendo
+	 */
+	public void setSubiendo(boolean subiendo) {
+		this.subiendo = subiendo;
 	}
 	
 }
