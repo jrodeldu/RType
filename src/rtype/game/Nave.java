@@ -25,6 +25,7 @@ public class Nave {
 	private int ancho, alto;
 	private Image imgNave;
 	protected int velocidad;
+	protected String tipoNave;
 	
 	/**
 	 * Constructor de enemigos
@@ -101,6 +102,14 @@ public class Nave {
 		return alto;
 	}
 	
+	public String getTipoNave() {
+		return tipoNave;
+	}
+
+	public void setTipoNave(String tipoNave) {
+		this.tipoNave = tipoNave;
+	}
+
 	/**
 	 * Creamos un rectángulo que rodee el elemento tomando su posición en
 	 * los ejes (x,y) y el tamaño de la imagen.

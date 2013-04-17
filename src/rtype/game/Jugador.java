@@ -29,27 +29,35 @@ public class Jugador extends Nave{
 	private ArrayList<Bala> balas;
 	// Retardo del último disparo.
 	private long ultimoDisparo = 0;	
+	private Nivel nivel;
 	
-	public Jugador(){
+	public Jugador(Nivel nivel){
 		super(10, 172, SRC_IMG_NAVE, VELOCIDAD_JUGADOR);
 		balas = new ArrayList<Bala>();
+		this.nivel = nivel;
+		System.out.println(getAlto());
 	}
 
 	/**
 	 * Movimiento horizontal y vertical de la nave.
 	 */
-	public void mover(int maxWidth, int maxHeight){
-		
+	public void mover(){
 		x += dx;
-		y += dy;
+		y += dy; 
 		
 		// Control de límites superior e izquierdo.
 		if(x < 0) x = 0;
 		if(y < 0) y = 0;
 		
 		// Control de límites inferior y derecho.
-		if(x > maxWidth - getAncho()) x = maxWidth - getAncho();
-		if(y > maxHeight - getAlto()) y = maxHeight - getAlto();
+		if(x > nivel.getWidth() - getAncho()){
+			x = nivel.getWidth() - getAncho();
+			System.out.println("Te sales del eje X, tu posición en el eje X es: " + getX() + " Recolocado en X: " + x);
+		}
+		if(y > nivel.getHeight() - getAlto()){
+			y = nivel.getHeight() - getAlto();
+			System.out.println("Te sales del eje Y, tu posición en el eje Y es: " + getY() + " Recolocado en Y: " + y);
+		}
 	}
 	
 	/**
@@ -69,19 +77,19 @@ public class Jugador extends Nave{
 		int key = e.getKeyCode();
 		
 		if(key == KeyEvent.VK_O || key == KeyEvent.VK_LEFT){
-			dx -= 1;  
+			dx -= VELOCIDAD_JUGADOR;  
 		}
 		
 		if(key == KeyEvent.VK_P || key == KeyEvent.VK_RIGHT){
-			dx += 1;  
+			dx += VELOCIDAD_JUGADOR;  
 		}
 		
 		if(key == KeyEvent.VK_Q || key == KeyEvent.VK_UP){
-			dy -= 1;
+			dy -= VELOCIDAD_JUGADOR;
 		}
 		
 		if(key == KeyEvent.VK_A || key == KeyEvent.VK_DOWN){
-			dy += 1;
+			dy += VELOCIDAD_JUGADOR;
 		}
 		
 		if (key == KeyEvent.VK_SPACE){

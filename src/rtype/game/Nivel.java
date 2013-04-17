@@ -25,6 +25,9 @@ import javax.swing.Timer;
  * Esta en la clase del que contendrá el nivel del juego.
  * Se dibujarán todos los elementos y se recogerán sus interacciones.
  * 
+ * Usaremos un timer para redibujar los elementos en pantalla
+ * y controlar y comprobar sus colisiones y desplazamientos en los ejes X e Y
+ * 
  * Extiende de JPanel.
  * 
  * @author Jonatan Rodríguez Elduayen jrodeldu
@@ -39,7 +42,7 @@ public class Nivel extends JPanel implements ActionListener{
 	private static final int ALTO_PANTALLA = 600;
 	// Imagen de fondo.
 	private static final String SRC_IMG_FONDO = "img/space.png";
-	private static final int RETARDO = 5; // Retardo para el timerr
+	private static final int RETARDO = 5; // Retardo para el timer
 	private Image imgFondo;
 	private Timer timer;
 	private int dificultad;
@@ -50,6 +53,7 @@ public class Nivel extends JPanel implements ActionListener{
 	private Jugador jugador;
 	private int enemigosEliminados = 0;
 	private int velocidadEnemigos;
+	private ArrayList<Nave> navesEnemigas;
 	
 	/**
 	 * Constructor e inicialización.
@@ -58,9 +62,10 @@ public class Nivel extends JPanel implements ActionListener{
 	public Nivel(int dificultad) {
 		// TODO Auto-generated constructor stub
 		// Inicializamos variables.
-		jugador = new Jugador();
+		jugador = new Jugador(this);
 		enemigosA = new ArrayList<EnemigoA>();
 		enemigosB = new ArrayList<EnemigoB>();
+		navesEnemigas = new ArrayList<Nave>();
 		this.dificultad = dificultad;
 		// Dejamos preparado la imágen de fondo para dibujarla en el panel.
 		ImageIcon img = new ImageIcon(SRC_IMG_FONDO);
@@ -76,59 +81,62 @@ public class Nivel extends JPanel implements ActionListener{
 		// Extendemos de JPanel y establecemos foco en el elemento para que pueda reaccionar a eventos de teclado.
 		setFocusable(true);
 		
-		// timer inicializado a 5ms. Ejecutará la función actionPerformed.
+		// Timer. Ejecutará la función actionPerformed.
 		timer = new Timer(RETARDO, this);
 		timer.start();
 	}
 
 	/**
-	 * Función llamada cada 5 ms
-	 * Se realizará el movimiento de la nave en pantalla.
+	 * Función llamada según los ms asignados en RETARDO. Realizará las siguientes tareas:
+	 * Se realizará el movimiento de las naves en pantalla.
+	 * Moverá las balas.
+	 * Comprobará que el juego no haya terminado.
+	 * Comprobará colisiones.
+	 * Redibujará en pantalla los elementos.
 	 * 
 	 * Esta función es necesaria al implementar la interfaz ActionListener.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// Movemos la nave y pasamos los límites del panel.
-		jugador.mover(ANCHO_PANTALLA, ALTO_PANTALLA);
+		
+		jugador.mover();
 		
 		// Mover balas.
 		ArrayList<Bala> balas = jugador.getBalas();
 		for (int i = 0; i < balas.size(); i++) {
 			Bala b = balas.get(i);
 			if(b.getVisible()){
-				b.mover(getWidth());
+				b.mover(ANCHO_PANTALLA);
 			}else{
 				balas.remove(i);
 			}
 		}
 		
-		// Mover enemigos
-		for (int i = 0; i < enemigosA.size(); i++) {
-			EnemigoA enemigo = enemigosA.get(i);
-			if(enemigo.getVisible()){
-				enemigo.mover();
-			}else{
-				enemigosA.remove(i);
-			}
-		}
-		
-		// Los enemigos de tipo B tienen movimiento aleatorio en ejeY
-		Random dy = new Random();
-		int ran, y;
-		for (int i = 0; i < enemigosB.size(); i++) {
-			EnemigoB enemigo = enemigosB.get(i);
-			if(enemigo.getVisible()){
-				// Movmiento aleatorio. Se pasa el máximo de alto para que no se salga de los límites de pantalla.
-				enemigo.mover(ALTO_PANTALLA);
-			}else{
-				enemigosB.remove(i);
+		// Movemos enemigos.
+		for (int i = 0; i < navesEnemigas.size(); i++) {
+			String tipo = navesEnemigas.get(i).getTipoNave();
+			if (tipo == "A") {
+				EnemigoA enemigo = (EnemigoA) navesEnemigas.get(i);
+				System.out.println(enemigo.getVisible());
+				if(enemigo.getVisible()){
+					enemigo.mover();
+				}else{
+					navesEnemigas.remove(i);
+				}
+			}	
+			if (tipo == "B") {
+				EnemigoB enemigo = (EnemigoB) navesEnemigas.get(i);
+				if(enemigo.getVisible()){
+					enemigo.mover(ALTO_PANTALLA);
+				}else{
+					navesEnemigas.remove(i);
+				}
 			}
 		}
 		
 		// Si se han eliminado todos los enemigos o el jugador ha chocado con una nave enemiga fin del juego y vuelta al menú.
 		if (getTotalEnemigos() == 0) {
-			// forzamos repain para que actualice la imágen con todos los enemigos borrados.
+			// forzamos repaint para que actualice la imágen con todos los enemigos borrados.
 			repaint();
 			finJuego(true);
 		}
@@ -169,14 +177,9 @@ public class Nivel extends JPanel implements ActionListener{
 			g2d.drawImage(b.getImagen(), b.getX(), b.getY(), null);
 		}
 		
-		// Dibujamos enemigos tipo A.
-		for (int i = 0; i < enemigosA.size(); i++) {
-			g2d.drawImage(enemigosA.get(i).getImagen(), enemigosA.get(i).getX(), enemigosA.get(i).getY(), null);
-		}
-		
-		// Dibujamos enemigos tipo B.
-		for (int i = 0; i < enemigosB.size(); i++) {
-			g2d.drawImage(enemigosB.get(i).getImagen(), enemigosB.get(i).getX(), enemigosB.get(i).getY(), null);
+		// Dibujamos enemigos
+		for (int i = 0; i < navesEnemigas.size(); i++) {
+			g2d.drawImage(navesEnemigas.get(i).getImagen(), navesEnemigas.get(i).getX(), navesEnemigas.get(i).getY(), null);
 		}
 		
 		// HUD con datos de juego.
@@ -228,7 +231,7 @@ public class Nivel extends JPanel implements ActionListener{
 			
 		case 3: // Imposible
 			totalEnemigos = 30;
-			velocidadEnemigos = 2 ;
+			velocidadEnemigos = 3 ;
 			break;			
 		}
 	}
@@ -247,14 +250,13 @@ public class Nivel extends JPanel implements ActionListener{
 			// Posición en el eje vertical y horizontal aleatoria del enemigo.
 			// Profundidad para aparición de enemigos poco a poco.
 			x = ran.nextInt(ANCHO_PANTALLA) + ANCHO_PANTALLA;
-			System.out.println(x);
 			y = ran.nextInt(ALTO_PANTALLA-100);
 			// Tipo de nave que se crea. O nave tipo A / 1 nave tipo B
 			tipo = ran.nextInt(2);
 			if (tipo == 0) {
-				enemigosA.add(new EnemigoA(x, y, velocidadEnemigos));
+				navesEnemigas.add(new EnemigoA(x, y, velocidadEnemigos));
 			}else{
-				enemigosB.add(new EnemigoB(x, y, velocidadEnemigos));
+				navesEnemigas.add(new EnemigoB(x, y, velocidadEnemigos));
 			}
 		}
 		
@@ -275,23 +277,19 @@ public class Nivel extends JPanel implements ActionListener{
 		// Área de colisión de la nave del jugador
 		Rectangle limitesJugador = jugador.getBordes();
 		
-		ArrayList<Rectangle> A = new ArrayList<Rectangle>();
-		ArrayList<Rectangle> B = new ArrayList<Rectangle>();
+		ArrayList<Rectangle> bordesNaves = new ArrayList<Rectangle>();
 		
+		Nave enemigo = null;
 		// Creamos áreas de colisiones en los enemigos
-		for (int i = 0; i < enemigosA.size(); i++) {
-			EnemigoA enemigo = enemigosA.get(i);
-			Rectangle bordesEnemigo = enemigo.getBordes();
-			A.add(bordesEnemigo);
-			if(jugador.getVisible() && limitesJugador.intersects(bordesEnemigo)){
-				jugador.setVisible(false);
+		for (int i = 0; i < navesEnemigas.size(); i++) {
+			if (navesEnemigas.get(i).getTipoNave() == "A") {
+				enemigo = (EnemigoA) navesEnemigas.get(i);
 			}
-		}
-		
-		for (int i = 0; i < enemigosB.size(); i++) {
-			EnemigoB enemigo = enemigosB.get(i);
+			if (navesEnemigas.get(i).getTipoNave() == "B") {
+				enemigo = (EnemigoB) navesEnemigas.get(i);
+			}
 			Rectangle bordesEnemigo = enemigo.getBordes();
-			B.add(bordesEnemigo);
+			bordesNaves.add(bordesEnemigo);
 			if(jugador.getVisible() && limitesJugador.intersects(bordesEnemigo)){
 				jugador.setVisible(false);
 			}
@@ -303,18 +301,10 @@ public class Nivel extends JPanel implements ActionListener{
 		for (int i = 0; i < balas.size(); i++) {
 			Bala bala = balas.get(i);
 			Rectangle bordesBala = bala.getBordes();
-			for (int j = 0; j < A.size(); j++) {
-				if (bala.getVisible() && enemigosA.get(j).getVisible() && bordesBala.intersects(A.get(j))) {
-					enemigosA.get(j).setVisible(false); 
+			for (int j = 0; j < bordesNaves.size(); j++) {
+				if (bala.getVisible() && navesEnemigas.get(j).getVisible() && bordesBala.intersects(bordesNaves.get(j))) {
+					navesEnemigas.get(j).setVisible(false); 
 					bala.setVisible(false);
-					enemigosEliminados++;
-					totalEnemigos--;
-				}
-			}
-			for (int j = 0; j < B.size(); j++) {
-				if (bala.getVisible() && enemigosB.get(j).getVisible() && bordesBala.intersects(B.get(j))) {
-					enemigosB.get(j).setVisible(false);
- 					bala.setVisible(false);
 					enemigosEliminados++;
 					totalEnemigos--;
 				}

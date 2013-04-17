@@ -13,8 +13,8 @@ import javax.swing.JLabel;
  * Clase RType
  * 
  * Es la clase principal de la aplicación, lanzará una interfaz sencilla
- * con botones para elegir nivel de dificultad y acto seguido creará un frame
- * en el que añadirá un objeto Nivel en el que se desarrollará el juego.
+ * con botones para elegir nivel de dificultad y según el botón de dificultad pulsado 
+ * creará un frame en el que añadirá un objeto Nivel en el que se desarrollará el juego.
  * 
  * @author Jonatan Rodríguez Elduayen jrodeldu
  *
@@ -73,20 +73,20 @@ public class RType implements ActionListener{
 	/**
 	 * Se crea un frame donde se cargará el panel de juego.
 	 * 
-	 * @param dificultad
+	 * @param dificultad asignada según botón pulsado.
 	 */
 	public void jugar(int dificultad){
 		JFrame frame = new JFrame();
 		
 		// Configuración del frame.
 		frame.setTitle("RType - JRODELDU");
-
-		frame.setSize(800, 600);
+		
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.add(new Nivel(dificultad));
-		// Hacemos visitble el frame y centrado.
+		frame.setSize(800, 600);
+		// Hacemos visible el frame y centrado.
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);		
 	}

@@ -23,6 +23,7 @@ public class EnemigoB extends Nave{
 	public EnemigoB(int posX, int posY, int velocidad) {
 		// TODO Auto-generated constructor stub
 		super(posX, posY, SRC_IMG_ENEMIGO, velocidad);
+		super.setTipoNave("B");
 	}
 	
 	/**
