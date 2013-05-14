@@ -76,6 +76,14 @@ public class Bala {
 	}
 	
 	/**
+	 * Establece posición en el eje X del objeto
+	 * @param x Posición en eje X
+	 */
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	/**
 	 * Establece visibilidad del proyectil.
 	 * @param visible
 	 */
@@ -87,10 +95,10 @@ public class Bala {
 	 * Movimiento horizontal del proyectil.
 	 * @param maxWidth: Ancho máximo de la pantalla
 	 */
-	public void mover(int maxWidth){
-		x += VELOCIDAD_BALA;
+	public void mover(Nivel nivel){
+		setX(getX() + VELOCIDAD_BALA);
 		// Control de límite. Si se sale se cambia visibilidad del proyectil.
-		if(x > maxWidth) setVisible(false);
+		if(getX() > nivel.getWidth()) setVisible(false);
 	}
 	
 	/**

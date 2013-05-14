@@ -1,5 +1,6 @@
 package rtype.game;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -71,27 +72,6 @@ public class RType implements ActionListener{
 	}
 	
 	/**
-	 * Se crea un frame donde se cargará el panel de juego.
-	 * 
-	 * @param dificultad asignada según botón pulsado.
-	 */
-	public void jugar(int dificultad){
-		JFrame frame = new JFrame();
-		
-		// Configuración del frame.
-		frame.setTitle("RType - JRODELDU");
-		
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		frame.add(new Nivel(dificultad));
-		frame.setSize(800, 600);
-		// Hacemos visible el frame y centrado.
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);		
-	}
-	
-	/**
 	 * Action Listener para los botones de la interfaz principal.
 	 * Cerraremos el frame principal y se llamará a la función jugar.
 	 * Justo en la llamada a jugar se pasará el valor entero correspondiente
@@ -103,6 +83,28 @@ public class RType implements ActionListener{
 		// Jugamos pasando el índice de dificultad.
 		frameMenu.dispose();
 		jugar(dificultad.indexOf(e.getActionCommand()));
+	}
+	
+	/**
+	 * Se crea un frame donde se cargará el panel de juego.
+	 * 
+	 * @param dificultad asignada según botón pulsado.
+	 */
+	private void jugar(int dificultad){
+		JFrame frame = new JFrame();
+		
+		// Configuración del frame.
+		frame.setTitle("RType - JRODELDU");
+		
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.add(new Nivel(dificultad));
+		frame.setPreferredSize(new Dimension(800, 600));
+		// Hacemos visible el frame y centrado.
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);		
 	}
 	
 	public static void main(String[] args){

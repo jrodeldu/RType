@@ -29,34 +29,33 @@ public class Jugador extends Nave{
 	private ArrayList<Bala> balas;
 	// Retardo del último disparo.
 	private long ultimoDisparo = 0;	
-	private Nivel nivel;
 	
-	public Jugador(Nivel nivel){
+	public Jugador(){
 		super(10, 172, SRC_IMG_NAVE, VELOCIDAD_JUGADOR);
 		balas = new ArrayList<Bala>();
-		this.nivel = nivel;
-		System.out.println(getAlto());
 	}
 
 	/**
 	 * Movimiento horizontal y vertical de la nave.
 	 */
-	public void mover(){
-		x += dx;
-		y += dy; 
+	public void mover(Nivel nivel){
+		// x += dx;
+		// y += dy;
+		setX(getX() + dx);
+		setY(getY() + dy);
 		
 		// Control de límites superior e izquierdo.
-		if(x < 0) x = 0;
-		if(y < 0) y = 0;
+		if(getX() < 0) setX(0);
+		if(getY() < 0) setY(0);
 		
 		// Control de límites inferior y derecho.
-		if(x > nivel.getWidth() - getAncho()){
-			x = nivel.getWidth() - getAncho();
-			System.out.println("Te sales del eje X, tu posición en el eje X es: " + getX() + " Recolocado en X: " + x);
+		if(getX() > nivel.getWidth() - getAncho()){
+			setX(nivel.getWidth() - getAncho());
+			// System.out.println("Te sales del eje X, tu posición en el eje X es: " + getX() + " Recolocado en X: " + x);
 		}
-		if(y > nivel.getHeight() - getAlto()){
-			y = nivel.getHeight() - getAlto();
-			System.out.println("Te sales del eje Y, tu posición en el eje Y es: " + getY() + " Recolocado en Y: " + y);
+		if(getY() > nivel.getHeight() - getAlto()){
+			setY(nivel.getHeight() - getAlto());
+			// System.out.println("Te sales del eje Y, tu posición en el eje Y es: " + getY() + " Recolocado en Y: " + y);
 		}
 	}
 	
@@ -108,7 +107,7 @@ public class Jugador extends Nave{
 	 * el lado derecho de la nave y a mitad de altura de la misma que es dónde se situa el cañon.
 	 */
 	private void disparar() {
-		if(getVisible()) balas.add(new Bala(x + getAncho(), y + getAlto() / 2));
+		if(getVisible()) balas.add(new Bala(getX() + getAncho(), getY() + getAlto() / 2));
 	}
 
 	/**

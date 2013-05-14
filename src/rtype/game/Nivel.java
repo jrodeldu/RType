@@ -1,6 +1,8 @@
 package rtype.game;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -16,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -37,39 +38,58 @@ import javax.swing.Timer;
 
 public class Nivel extends JPanel implements ActionListener{
 	
-	// Resolución
-	private static final int ANCHO_PANTALLA = 800;
-	private static final int ALTO_PANTALLA = 600;
+	// Puntos por enemigo eliminado
+	private static final int PUNTOS_ACIERTO = 100;
 	// Imagen de fondo.
 	private static final String SRC_IMG_FONDO = "img/space.png";
-	private static final int RETARDO = 5; // Retardo para el timer
+	// Retardo para el timer
+	private static final int RETARDO = 5;
 	private Image imgFondo;
 	private Timer timer;
 	private int dificultad;
 	// Total de enemigos según dificultad elegida.
 	private int totalEnemigos;
 	private Jugador jugador;
-	private int enemigosEliminados = 0;
+	private int enemigosEliminados; // Contador de enemigos eliminados
 	private int velocidadEnemigos;
-	private ArrayList<Nave> navesEnemigas;
+	private ArrayList<Nave> navesEnemigas; // Naves enemigas, tanto de tipo A como tipo B
+	// Variables para control de scroll de fondo.
+	private int proxFondo, proxFondo2;
+	private int anchoImgFondo;
+	// Los enemigos se crean en el primer paint para saber las dimensiones del terreno jugable.
+	private boolean enemigosCreados;
+	// Variable para avance del background.
+	private int avanza;
+	private boolean gameOver;
 	
 	/**
 	 * Constructor e inicialización.
+	 * Se inicializan todas las variables.
+	 * Se establece el número de enemigos según la dificultad.
+	 * Se inicializa el Timer.
 	 * @param dificultad: nivel de dificultad del juego.
 	 */
 	public Nivel(int dificultad) {
 		// TODO Auto-generated constructor stub
 		// Inicializamos variables.
-		jugador = new Jugador(this);
+		jugador = new Jugador();
 		navesEnemigas = new ArrayList<Nave>();
 		this.dificultad = dificultad;
 		// Dejamos preparado la imágen de fondo para dibujarla en el panel.
 		ImageIcon img = new ImageIcon(SRC_IMG_FONDO);
 		imgFondo = img.getImage();
 		
-		// Establecer total de enemigos y cargarlos.
+		anchoImgFondo = imgFondo.getWidth(null);
+		proxFondo = anchoImgFondo;
+		proxFondo2 = 0;
+		avanza = 1;
+		
+		enemigosCreados = false;
+		enemigosEliminados = 0;
+		gameOver = false;
+		
+		// Establecer total de enemigos.
 		setTotalEnemigos();
-		cargarEnemigos();
 		
 		// Añadimos al panel el listener de eventos de teclado. Clase interna (Inner class) creada al final.
 		addKeyListener(new eventosTeclado());
@@ -94,15 +114,14 @@ public class Nivel extends JPanel implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		jugador.mover();
+		jugador.mover(this);
 		
 		// Mover balas.
 		ArrayList<Bala> balas = jugador.getBalas();
 		for (int i = 0; i < balas.size(); i++) {
 			Bala b = balas.get(i);
 			if(b.getVisible()){
-				b.mover(ANCHO_PANTALLA);
+				b.mover(this);
 			}else{
 				balas.remove(i);
 			}
@@ -133,11 +152,12 @@ public class Nivel extends JPanel implements ActionListener{
 		if (getTotalEnemigos() == 0) {
 			// forzamos repaint para que actualice la imágen con todos los enemigos borrados.
 			repaint();
-			finJuego(true);
+			pararJuego();
 		}
 		
+		
 		if( ! jugador.getVisible()){
-			finJuego(false);
+			pararJuego();
 		}
 		
 		// Control de colisiones
@@ -148,26 +168,60 @@ public class Nivel extends JPanel implements ActionListener{
 	/**
 	 * Función a la que se llama para redibujar la pantalla
 	 * del juego con las posiciones actualizadas.
+	 * 
+	 * La primera vez que se ejecute se cargarán los enemigos.
 	 */
 	public void paint(Graphics g){
-		// System.out.println("Llamada a paint!!");
+		// Pintamos.
 		super.paint(g);
+		
+		// Los enemigos se crean en el primer paint para poder obtener las dimensiones
+		// del panel para poder situa a los enemigos en él.
+		if (!enemigosCreados) {
+			cargarEnemigos();
+		}
 		
 		// Hacemos un cast de g a Graphics2D. Recomendado por tutoriales de Java.
 		Graphics2D g2d = (Graphics2D) g;
-		ArrayList<Bala> balas = jugador.getBalas();
+
+		// Dibujamos fondo. Creamos un efecto scroll en el fondo para dar impresión de navegar en espacio.
+		// Si el resto entre el tamaño del fondo y el ancho del panel es 0, el prox fondo se sitúa en la posición
+		// marcada por el ancho de la imagen de fondo, en este caso 800.
+		// El método consiste en dibujar 2 fondos e ir rodándolos infinitamente.
+		// El pimero se situará en la posición 0 y el otro en 800 e iremos rodándolos haciendo que se generen en esta secuencia:
+		// 0 y 800 / -1 y 799 / -2 y 798.... al llegar a un punto en el que el resto sea 0 reiniciaremos los valores.
+		if (proxFondo % anchoImgFondo == 0) {
+			proxFondo = anchoImgFondo;
+		}
 		
-		// Dibujamos fondo.
-		g2d.drawImage(imgFondo, 0, 0, null);
+		if (proxFondo2 % anchoImgFondo == 0) {
+			proxFondo2 = 0;
+		}
+		
+		// getWidth()-proxFondo de inicio será igual a 0 y sucesivamente irá desplazando la imágen hacia la izq.
+		g2d.drawImage(imgFondo, getWidth()-proxFondo, 0, null);
+		if (proxFondo >= anchoImgFondo ) {
+			g2d.drawImage(imgFondo, getWidth()-proxFondo2, 0, null);
+		}
+		
+		// El fondo avanzará cada 2 llamadas a paint.
+		// De modo que al tener dificultad fácil las naves avanzarán y no dará impresión de estar pegadas en el fondo.
+		if(avanza%2 == 0){
+			proxFondo++; // Desplazaremos la próx vez la imagen 1 punto.	
+			proxFondo2++; // El otro fondo aux a dibujar se situará 1 punto a la izq;
+		}
+		
+		avanza++;
 		
 		// Dibujamos nave sólo si sigue viva (visible)
 		if(jugador.getVisible()){
 			g2d.drawImage(jugador.getImagen(), jugador.getX(), jugador.getY(), null);
 		}
-			
+		
+		ArrayList<Bala> balas = jugador.getBalas();
 		// Dibujamos proyectiles.
 		for (int i = 0; i < balas.size(); i++) {
-			// System.out.println("dibujo bala " + i);
+			// Dibujamos bala.
 			Bala b = balas.get(i);
 			g2d.drawImage(b.getImagen(), b.getX(), b.getY(), null);
 		}
@@ -179,8 +233,38 @@ public class Nivel extends JPanel implements ActionListener{
 		
 		// HUD con datos de juego.
 		g2d.setColor(Color.white);
-		g2d.drawString("Puntos: " + enemigosEliminados, 0, 10);
-		g2d.drawString("Enemigos restantes: " +totalEnemigos, 625, 10);
+		g2d.drawString("Puntos: " + enemigosEliminados * PUNTOS_ACIERTO, 0, 10);
+		g2d.drawString("Enemigos restantes: " + totalEnemigos, getWidth()-200, 10);
+		
+		// Mensajes de GAME OVER
+		if (getTotalEnemigos() == 0 || !jugador.getVisible()) {
+			Font big = new Font("Helvetica", Font.BOLD, 18); // Fuente grande.
+			Font small = new Font("Helvetica", Font.BOLD, 14); // Fuente más pequeña para mensaje inferior.
+			// Se establece la fuente grande
+			g.setFont(big);
+			// Color
+			g.setColor(Color.WHITE);
+			// Variables de Strings
+			String mensaje = "";
+			String reinicio = "¿Quierenes volver a jugar? S o N";
+			
+			// Mensaje según victoria o derrota.
+			if (getTotalEnemigos() == 0) mensaje = "¡Has ganado!";
+			if (!jugador.getVisible()) mensaje = "¡Has perdido!";
+			
+	        FontMetrics fm = g.getFontMetrics();
+	        double mensajeAncho = fm.getStringBounds(mensaje, g).getWidth();
+	        // Dibujamos mensaje victoria/derrota centrado
+	        g.drawString(mensaje, (int) (getWidth()/2 - mensajeAncho/2),
+	                           (int) (getHeight()/2 + fm.getMaxAscent()/2));
+	        
+	        g.setFont(small);
+	        fm = g.getFontMetrics();
+	        // Dibujamos mensaje para reiniciar/cerrar el juego
+	        double reinicioAncho = fm.getStringBounds(reinicio, g).getWidth();
+	        g.drawString(reinicio, (int) (getWidth()/2 - reinicioAncho/2),
+	                			(int) (getHeight()/2 + fm.getMaxAscent()/2)+20);
+		}
 		
 		// sync nos permite mantener actualizado el estado de los gráficos.
 		// Tal y como dice la documentación: Algunos sistemas de ventanas pueden hacer buffering en eventos gráficos.
@@ -221,7 +305,7 @@ public class Nivel extends JPanel implements ActionListener{
 			
 		case 2: // Complicado
 			totalEnemigos = 20;
-			velocidadEnemigos = 2;
+			velocidadEnemigos = 3;
 			break;
 			
 		case 3: // Imposible
@@ -237,6 +321,7 @@ public class Nivel extends JPanel implements ActionListener{
 	 * Cada nave se situará en pantalla en una posición x e y aleatoria.
 	 */
 	private void cargarEnemigos() {
+
 		Random ran = new Random();
 		int x,y;
 		int tipo;
@@ -244,8 +329,8 @@ public class Nivel extends JPanel implements ActionListener{
 		for (int i = 0; i < totalEnemigos; i++) {
 			// Posición en el eje vertical y horizontal aleatoria del enemigo.
 			// Profundidad para aparición de enemigos poco a poco.
-			x = ran.nextInt(ANCHO_PANTALLA) + ANCHO_PANTALLA;
-			y = ran.nextInt(ALTO_PANTALLA-100);
+			x = ran.nextInt(getWidth()) + getWidth();
+			y = ran.nextInt(getHeight()-100);
 			// Tipo de nave que se crea. O nave tipo A / 1 nave tipo B
 			tipo = ran.nextInt(2);
 			if (tipo == 0) {
@@ -254,6 +339,9 @@ public class Nivel extends JPanel implements ActionListener{
 				navesEnemigas.add(new EnemigoB(x, y, velocidadEnemigos));
 			}
 		}
+		
+		// Una vez creados los enemigos ya no hay que volver a generarlos.
+		enemigosCreados = true;
 		
 	}
 	
@@ -308,25 +396,34 @@ public class Nivel extends JPanel implements ActionListener{
 	}
 	
 	/**
-	 * Función para mostrar mensaje de victoria o derrota y fin del juego.
-	 * Una vez mostrado el mensaje se volverá a cargar el menú principal.
-	 * 
-	 * @param victoria booleano para saber si el jugador ganó o perdió
+	 * Función para detener el timer del juego y activar el
+	 * flag de gameOver que permitirá que el panel reaccione
+	 * a eventos de teclado para reiniciar el juego.
 	 */
-	private void finJuego(boolean victoria){
-		// Recuperamos la ventana contenedora y la cerramos y lanzamos el menú.
-		Window ventana = SwingUtilities.getWindowAncestor(this);
+	private void pararJuego(){
 		// Paramos timer.
 		timer.stop();
-		
-		if (victoria) {
-			JOptionPane.showMessageDialog(null, "¡HAS GANADO!", "Juego terminado", JOptionPane.INFORMATION_MESSAGE);
-		}else{
-			JOptionPane.showMessageDialog(null, "¡HAS PERDIDO!", "Juego terminado", JOptionPane.INFORMATION_MESSAGE);			
+		gameOver = true;
+	}
+	
+	/**
+	 * Se decide si se reinicia el juego(S)
+	 * o se sale de el(N)
+	 * @param e tecla pulsada
+	 */
+	private void gameOver(KeyEvent e){
+		int key = e.getKeyCode();
+		// Recuperamos la ventana contenedora y la cerramos y lanzamos el menú.
+		Window ventana = SwingUtilities.getWindowAncestor(this);
+		// Reiniciamos juego
+		if(key == KeyEvent.VK_S){
+			ventana.dispose();
+			new RType();
 		}
-		
-		ventana.dispose();
-		new RType();
+		// Cerramos juego
+		if(key == KeyEvent.VK_N){
+			ventana.dispose();  
+		}
 	}
 
 	/**
@@ -344,7 +441,11 @@ public class Nivel extends JPanel implements ActionListener{
 		
 		// Tecla pulsada
 		public void keyPressed(KeyEvent e){
-			jugador.keyPressed(e); 
+			jugador.keyPressed(e);
+			// Eventos para fin del juego
+			if (gameOver) {
+				gameOver(e);
+			}
 		}
 	}
 	

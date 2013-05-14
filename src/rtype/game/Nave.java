@@ -6,10 +6,11 @@ import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 /**
- * Clase de naves enemigas.
+ * Clase Nave.
  * 
- * Es el modelo base para los distintos tipos de enemigos
- * que en este caso tendrán distinto comportamiento en el desplazamiento.
+ * Es la clase de la que heradan los dintintos tipos de naves, tanto jugador como enemigos.
+ * Comparten la mayoría de los métodos salvo los movimientos que están definidos en las distintas
+ * clases hijas.
  * 
  * El resto de métodos y propiedades no varía salvo la imágen que representa
  * las naves enemigas.
@@ -17,7 +18,7 @@ import javax.swing.ImageIcon;
  * @author Jonatan Rodríguez Elduayen jrodeldu
  *
  */
-public class Nave {
+public abstract class Nave {
 	
 	protected int x;
 	protected int y;
@@ -74,14 +75,6 @@ public class Nave {
 	}
 
 	/**
-	 * Establece valor visible de la nave.
-	 * @param visible: si está vivo será true, si no, falso.
-	 */
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
-	/**
 	 * @return imagen de la nave.
 	 */
 	public Image getImagen() {
@@ -102,8 +95,35 @@ public class Nave {
 		return alto;
 	}
 	
+	/**
+	 * @return tipo de Nave del objeto. Usado para diferenciar entre naves enemigas.
+	 */
 	public String getTipoNave() {
 		return tipoNave;
+	}
+	
+	/**
+	 * Establece posición en el eje X del objeto
+	 * @param x Posición en eje X
+	 */
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	/**
+	 * Establece posición en el eje Y del objeto
+	 * @param y Posición en eje Y
+	 */
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	/**
+	 * Establece valor visible de la nave.
+	 * @param visible: si está vivo será true, si no, falso.
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	public void setTipoNave(String tipoNave) {
@@ -118,4 +138,10 @@ public class Nave {
 	public Rectangle getBordes(){
 		return new Rectangle(getX(), getY(), getAncho(), getAncho());
 	}
+	
+	/**
+	 * Método para el movimiento de las naves.
+	 * @param nivel con él controlaremos los límites del desplazamiento permitido.
+	 */
+	public abstract void mover(Nivel nivel);
 }

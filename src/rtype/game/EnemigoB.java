@@ -3,7 +3,7 @@ package rtype.game;
 import java.util.Random;
 
 /**
- * Clase de los enemigos tipo A del juego.
+ * Clase de los enemigos tipo B del juego.
  * 
  * La nave no efectúa ningún disparo, su movimiento
  * es constante de derecha a izquierda y va variando
@@ -41,14 +41,14 @@ public class EnemigoB extends Nave{
 		
 		// Si la nave sube
 		if (getSubiendo()) {
-			y -= 1;
+			setY(getY() - 1); 
 			dy--;
 			// Si ha realizado su recorrido en su rango de variación en ejeY se cambia el sentido.
 			if (dy == 0) {
 				setSubiendo(false);
 			}
 		}else{
-			y += 1;
+			setY(getY() + 1);
 			dy++;
 			// Si ha realizado su recorrido en su rango de variación en ejeY se cambia el sentido.
 			if (dy == variacionY) {
@@ -57,14 +57,15 @@ public class EnemigoB extends Nave{
 		}
 		
 		// Desplazamiento constante en eje X.
-		x -= velocidad;
+		setX(getX() - velocidad);
 
 		// Recolocar la nave en la derecha una vez llegado a la izquierda.
-		if(x < 0-getAncho()) x = nivel.getWidth();
+		if(getX() < 0-getAncho()) setX(nivel.getWidth());
 		// Control límite superior eje Y
-		if(y < 0) y = 0;
+		if(getY() < 0) setY(0);
 		// Control límite inferior eje Y
-		if(y > nivel.getHeight() - getAlto()) y = nivel.getHeight() - getAlto();
+		if(getY() > nivel.getHeight() - getAlto()) 
+			setY(nivel.getHeight() - getAlto());
 	}
 	
 	/**

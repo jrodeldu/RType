@@ -22,14 +22,14 @@ public class EnemigoA extends Nave{
 		super(posX, posY, SRC_IMG_ENEMIGO, velocidad);
 		super.setTipoNave("A");
 	}
-	
+
 	/**
 	 * Movimiento constante de las naves
 	 */
 	public void mover(Nivel nivel){
-		x -= velocidad;
-		if(x < 0-getAncho())
-			x = nivel.getWidth();
+		setX(getX() - velocidad);
+		if(getX() < 0-getAncho())
+			setX(nivel.getWidth());
 	}
 	
 }
