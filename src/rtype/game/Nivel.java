@@ -148,16 +148,12 @@ public class Nivel extends JPanel implements ActionListener{
 			}
 		}
 		
-		// Si se han eliminado todos los enemigos o el jugador ha chocado con una nave enemiga fin del juego y vuelta al menú.
-		if (getTotalEnemigos() == 0) {
-			// forzamos repaint para que actualice la imágen con todos los enemigos borrados.
-			repaint();
-			pararJuego();
-		}
-		
-		
-		if( ! jugador.getVisible()){
-			pararJuego();
+		// Si se han eliminado todos los enemigos o el jugador ha chocado con una nave enemiga fin del juego
+		// y se atienden a peticiones de teclado para reiniciar o no el juego.
+		if(getTotalEnemigos() == 0 || !jugador.getVisible()){
+			// No detenemos el timer para que siga habiendo movimiento y no quede una detención en seco del dibujado.
+			// timer.stop();
+			gameOver = true;
 		}
 		
 		// Control de colisiones
@@ -237,7 +233,7 @@ public class Nivel extends JPanel implements ActionListener{
 		g2d.drawString("Enemigos restantes: " + totalEnemigos, getWidth()-200, 10);
 		
 		// Mensajes de GAME OVER
-		if (getTotalEnemigos() == 0 || !jugador.getVisible()) {
+		if (gameOver) {
 			Font big = new Font("Helvetica", Font.BOLD, 18); // Fuente grande.
 			Font small = new Font("Helvetica", Font.BOLD, 14); // Fuente más pequeña para mensaje inferior.
 			// Se establece la fuente grande
@@ -393,17 +389,6 @@ public class Nivel extends JPanel implements ActionListener{
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Función para detener el timer del juego y activar el
-	 * flag de gameOver que permitirá que el panel reaccione
-	 * a eventos de teclado para reiniciar el juego.
-	 */
-	private void pararJuego(){
-		// Paramos timer.
-		timer.stop();
-		gameOver = true;
 	}
 	
 	/**
