@@ -57,7 +57,7 @@ public class EnemigoB extends Nave{
 		}
 		
 		// Desplazamiento constante en eje X.
-		setX(getX() - velocidad);
+		setX(getX() - getVelocidad());
 
 		// Recolocar la nave en la derecha una vez llegado a la izquierda.
 		if(getX() < 0-getAncho()) setX(nivel.getWidth());

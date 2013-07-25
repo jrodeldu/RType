@@ -20,13 +20,13 @@ import javax.swing.ImageIcon;
  */
 public abstract class Nave {
 	
-	protected int x;
-	protected int y;
+	private int x;
+	private int y;
 	private boolean visible;
 	private int ancho, alto;
 	private Image imgNave;
-	protected int velocidad;
-	protected String tipoNave;
+	private int velocidad;
+	private String tipoNave;
 	
 	/**
 	 * Constructor de enemigos
@@ -93,6 +93,13 @@ public abstract class Nave {
 	 */
 	public int getAlto(){
 		return alto;
+	}
+	
+	/**
+	 * @return valocidad de movimiento.
+	 */
+	public int getVelocidad() {
+		return velocidad;
 	}
 	
 	/**

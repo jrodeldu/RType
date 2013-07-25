@@ -27,7 +27,7 @@ public class EnemigoA extends Nave{
 	 * Movimiento constante de las naves
 	 */
 	public void mover(Nivel nivel){
-		setX(getX() - velocidad);
+		setX(getX() - getVelocidad());
 		if(getX() < 0-getAncho())
 			setX(nivel.getWidth());
 	}
